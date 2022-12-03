@@ -4,7 +4,6 @@ import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
-import ch.epfl.cs107.play.game.tutosSolution.Tuto2Behavior;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICRogueBehavior extends AreaBehavior {
@@ -56,10 +55,10 @@ public class ICRogueBehavior extends AreaBehavior {
         private final ICRogueCellType type;
 
         /**
-         * Default Tuto2Cell Constructor
+         * ICRogueCell Constructor
          * @param x (int): x coordinate of the cell
          * @param y (int): y coordinate of the cell
-         * @param type (EnigmeCellType), not null
+         * @param type (ICRogueCellType), not null
          */
         public  ICRogueCell(int x, int y, ICRogueCellType type){
             super(x, y);
@@ -87,6 +86,10 @@ public class ICRogueBehavior extends AreaBehavior {
             return false;
         }
 
+        /**
+         * getType
+         * @return (ICRogueCellType) return the type of the cell
+         */
         public ICRogueCellType getType() {
             return type;
         }

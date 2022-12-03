@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
@@ -19,19 +20,24 @@ import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private float hp;
     private boolean canUseFire;
+    protected boolean isChangingRoom;
     private TextGraphics message;
     private Sprite sprite;
     /// Animation duration in frame number
 
     public ICRoguePlayerInteractionHandler handler;
-
+    private String destinationRoom;
+    private DiscreteCoordinates destinationCoordinates;
     private final static int MOVE_DURATION = 8;
+
+    private ArrayList<Integer> keys = new ArrayList<>();
     /**
      * Demo actor
      *
@@ -62,6 +68,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
             message.setText(Integer.toString((int)hp));
         }
         if (hp < 0) hp = 0.f;*/
+        isChangingRoom = false;
         Keyboard keyboard= getOwnerArea().getKeyboard();
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
@@ -72,9 +79,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         if(keyboard.get(Keyboard.X).isPressed() && canUseFire){
             getOwnerArea().registerActor(new Fire(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates()));
         }
-
         super.update(deltaTime);
-
     }
     /**
      * Orientate and Move this player in the given orientation if the given button is down
@@ -103,6 +108,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         getOwnerArea().unregisterActor(this);
     }
 
+    public boolean isChangingRoom() {
+        return isChangingRoom;
+    }
+
     /**
      *
      * @param area (Area): initial area, not null
@@ -119,16 +128,16 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
-        message.draw(canvas);
+        //message.draw(canvas);
     }
 
-    public boolean isWeak() {
-        return (hp <= 0.f);
-    }
-
-    public void strengthen() {
-        hp = 10;
-    }
+//    public boolean isWeak() {
+//        return (hp <= 0.f);
+//    }
+//
+//    public void strengthen() {
+//        hp = 10;
+//    }
 
     @Override
     public boolean takeCellSpace() {
@@ -165,6 +174,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         return keyboard.get(Keyboard.W).isDown();
     }
 
+    public String getDestinationRoom(){
+        return destinationRoom;
+    }
+    public DiscreteCoordinates getArrivalCoordinate(){
+        return destinationCoordinates;
+    }
+
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
@@ -180,11 +196,30 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         public void interactWith(Cherry other, boolean isCellInteraction) {
             other.collect();
         }
-
         @Override
         public void interactWith(Staff other, boolean isCellInteraction) {
             other.collect();
             canUseFire = true;
+        }
+        @Override
+        public void interactWith(Key other, boolean isCellInteraction) {
+            other.collect();
+            keys.add(other.getId());
+        }
+        @Override
+        public void interactWith(Connector other, boolean isCellInteraction) {
+            System.out.println(isCellInteraction);
+            if(!isCellInteraction){
+                int keyUsed = other.unLock(keys);
+                if(keyUsed!= -1){
+                    keys.remove(keyUsed);
+                }
+            }
+            else if(!isDisplacementOccurs()){
+                isChangingRoom = true;
+                destinationRoom = other.getDestination();
+                destinationCoordinates = other.getArrivalCoordinates();
+            }
         }
     }
 }

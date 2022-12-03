@@ -1,10 +1,16 @@
 package ch.epfl.cs107.play.game.icrogue.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
+import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ICRogueRoom extends Area {
 
@@ -12,10 +18,15 @@ public abstract class ICRogueRoom extends Area {
 
     protected DiscreteCoordinates position;
     protected static String behaviorName;
+    protected ArrayList<Connector> connectors = new ArrayList<>();
 
-    public ICRogueRoom(String behaviorName, DiscreteCoordinates roomCoordinates){
+    public ICRogueRoom(List<DiscreteCoordinates> connectorsCoordinates, List<Orientation> orientations, String behaviorName, DiscreteCoordinates roomCoordinates){
         this.behaviorName = behaviorName;
         this.position = roomCoordinates;
+
+        for (int i = 0; i<connectorsCoordinates.size(); i++) {
+            connectors.add(new Connector(this, orientations.get(i), connectorsCoordinates.get(i), Connector.ICRogueConnectorState.INVISIBLE, "", new DiscreteCoordinates(0,0)));
+        }
     }
 
     /**
@@ -43,8 +54,32 @@ public abstract class ICRogueRoom extends Area {
             behavior = new ICRogueBehavior(window, behaviorName);
             setBehavior(behavior);
             createArea();
+            for (Connector connector: connectors) {
+                registerActor(connector);
+            }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        Keyboard keyboard = getKeyboard();
+        if(keyboard.get(Keyboard.O).isPressed()){
+            for (Connector connector:
+                 connectors) {
+                connector.openConnector();
+            }
+        }
+        if (keyboard.get(Keyboard.L).isPressed()){
+            connectors.get(0).lockConnector(1);
+        }
+        if(keyboard.get(Keyboard.T).isPressed()){
+            for (Connector connector:
+                connectors) {
+            connector.switchState();
+        }
+        }
+        super.update(deltaTime);
     }
 }
