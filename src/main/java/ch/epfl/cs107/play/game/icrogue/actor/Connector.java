@@ -5,8 +5,6 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.icrogue.area.ConnectorInRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
@@ -26,7 +24,7 @@ public class Connector extends AreaEntity {
     private ICRogueConnectorState state;
     private String destination;
     private DiscreteCoordinates arrivalCoordinates;
-    private int identificateur;
+    private int keyID;
     private Sprite sprite;
     /**
      * Default AreaEntity constructor
@@ -35,13 +33,13 @@ public class Connector extends AreaEntity {
      * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
      * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
      */
-    public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates, int identificateur) {
+    public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates, int keyID) {
         super(area, orientation, position);
         this.state = state;
         this.destination = destination;
         this.arrivalCoordinates = arrivalCoordinates;
-        this.identificateur = identificateur;
-        this.sprite = getStrirte(state);
+        this.keyID = keyID;
+        this.sprite = selectSprite(state);
     }
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates) {
         this(area, orientation,position, state, destination, arrivalCoordinates, NO_KEY_ID);
@@ -68,16 +66,16 @@ public class Connector extends AreaEntity {
         return List.of(coord, coord.jump(new Vector((getOrientation().ordinal()+1)%2, getOrientation().ordinal()%2)));
     }
 
-    private Sprite getStrirte(ICRogueConnectorState state){
+    private Sprite selectSprite(ICRogueConnectorState state){
         switch (state){
             case CLOSED -> {
-                return new Sprite("icrogue/door_"+this.getOrientation().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+                return new Sprite("icrogue/door_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
             }
             case LOCKED -> {
-                return new Sprite("icrogue/lockedDoor_"+this.getOrientation().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+                return new Sprite("icrogue/lockedDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
             }
         }
-        return new Sprite("icrogue/invisibleDoor_"+this.getOrientation().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+        return new Sprite("icrogue/invisibleDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class Connector extends AreaEntity {
     }
     public void setState(ICRogueConnectorState state){
         this.state = state;
-        sprite = getStrirte(state);
+        sprite = selectSprite(state);
     }
     @Override
     public boolean isCellInteractable() {
@@ -103,25 +101,27 @@ public class Connector extends AreaEntity {
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
     public void openConnector(){
-        this.state = ICRogueConnectorState.OPEN;
+        if (this.state != ICRogueConnectorState.LOCKED && this.state !=ICRogueConnectorState.INVISIBLE) {
+            this.state = ICRogueConnectorState.OPEN;
+        }
     }
     public void closeConnector(){
         if(this.state != ICRogueConnectorState.LOCKED) this.state = ICRogueConnectorState.CLOSED;
     }
     public void lockConnector(int id){
         this.state = ICRogueConnectorState.LOCKED;
-        this.identificateur = id;
-        this.sprite = new Sprite("icrogue/lockedDoor_"+getOrientation().ordinal(), (getOrientation().ordinal()+1)%2+1, getOrientation().ordinal()%2+1, this);
+        this.keyID = id;
+        this.sprite = selectSprite(state);
     }
 
     public int unLock(List<Integer> playerKeys){
-        if(identificateur == Integer.MAX_VALUE){
-            openConnector();
+        if(keyID == Integer.MAX_VALUE){
+            state = ICRogueConnectorState.OPEN;
             return -1;
         }
         for (int i = 0;  i<playerKeys.size() ; i++) {
-            if(playerKeys.get(i) == identificateur){
-                openConnector();
+            if(playerKeys.get(i) == keyID){
+                state = ICRogueConnectorState.OPEN;
                 return i;
             }
         }

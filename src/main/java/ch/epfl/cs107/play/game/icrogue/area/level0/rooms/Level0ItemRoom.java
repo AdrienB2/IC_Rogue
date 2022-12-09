@@ -35,4 +35,22 @@ public abstract class Level0ItemRoom extends Level0Room{
         }
         return false;
     }
+
+    @Override
+    public boolean isOn() {
+        boolean isItemsCollected = true;
+        for (Item item:
+                items) {
+            if(!item.isCollected()){
+                isItemsCollected = false;
+                break;
+            }
+        }
+        return isItemsCollected && isVisited;
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
+    }
 }

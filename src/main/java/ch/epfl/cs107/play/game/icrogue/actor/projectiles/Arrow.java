@@ -7,7 +7,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
-import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
+import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -15,19 +15,19 @@ import ch.epfl.cs107.play.math.Vector;
 import java.util.Collections;
 import java.util.List;
 
-public class Fire extends Projectile implements Interactor {
+public class Arrow extends Projectile implements Interactor {
 
-    private FireInteractionHandler handler;
-    public Fire(Area area, Orientation orientation, DiscreteCoordinates position) {
+    private ArrowInteractionHandler handler;
+    public Arrow(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, 5);
-        handler = new FireInteractionHandler();
-        setSprite(new Sprite("zelda/fire", 1f, 1f, this, new RegionOfInterest(0, 0, 16, 16), new Vector(0, 0)));
+        handler = new ArrowInteractionHandler();
+        setSprite(new Sprite("zelda/arrow", 1f, 1f, this,
+                new RegionOfInterest(32*orientation.ordinal(), 0, 32, 32),
+                new Vector(0, 0)));
     }
 
     @Override
-    public boolean isCellInteractable() {
-        return !isConsumed();
-    }
+    public boolean isCellInteractable() { return true; }
 
     @Override
     public boolean isViewInteractable() {
@@ -62,11 +62,16 @@ public class Fire extends Projectile implements Interactor {
     }
 
     @Override
+    public boolean takeCellSpace() {
+        return false;
+    }
+
+    @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
     }
 
-    private class FireInteractionHandler implements ICRogueInteractionHandler {
+    private class ArrowInteractionHandler implements ICRogueInteractionHandler {
         @Override
         public void interactWith(ICRogueBehavior.ICRogueCell other, boolean isCellInteraction) {
             if (other.getType() == ICRogueBehavior.ICRogueCellType.HOLE || other.getType() == ICRogueBehavior.ICRogueCellType.WALL){
@@ -75,8 +80,9 @@ public class Fire extends Projectile implements Interactor {
         }
 
         @Override
-        public void interactWith(Turret other, boolean isCellInteraction) {
-            other.kill();
+        public void interactWith(ICRoguePlayer other, boolean isCellInteraction) {
+            System.out.println("PLAYER");
+            other.takeDamages(damage);
             consume();
         }
     }

@@ -19,11 +19,7 @@ public class ICRogue extends AreaGame {
     private Level0 level;
 
     private void initLevel(){
-        level = new Level0();
-        for (ICRogueRoom room:
-                level.getRooms()) {
-            addArea(room);
-        }
+        level = new Level0(this);
 
         currentArea = setCurrentArea(level.getFirstRoomTitle(), true);
         player = new ICRoguePlayer(currentArea, Orientation.UP, new DiscreteCoordinates(2,2), "zelda/player");
@@ -34,6 +30,7 @@ public class ICRogue extends AreaGame {
         player = new ICRoguePlayer(currentArea, Orientation.DOWN, new DiscreteCoordinates(2,2), "zelda/player");
         player.enterArea(currentArea, new DiscreteCoordinates(2,2));
     }
+
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
@@ -63,6 +60,13 @@ public class ICRogue extends AreaGame {
         if(player.isChangingRoom()){
             switchRoom(player.getDestinationRoom(), player.getArrivalCoordinate());
         }
+
+        if(level.isOn()){
+            System.out.println("WIN");
+        }
+        if(player.getHp()<=0){
+            System.out.println("GameOver");
+        }
         super.update(deltaTime);
 
     }
@@ -79,7 +83,5 @@ public class ICRogue extends AreaGame {
         player.leaveArea();
         currentArea = setCurrentArea(destinationRoom, false);
         player.enterArea(currentArea, playerArrivalCoordinates);
-        System.out.println(playerArrivalCoordinates);
-        player.changePosition(playerArrivalCoordinates);
     }
 }

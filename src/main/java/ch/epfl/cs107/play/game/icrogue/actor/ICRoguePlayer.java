@@ -2,15 +2,14 @@ package ch.epfl.cs107.play.game.icrogue.actor;
 
 import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Interactor;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
+import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -29,13 +28,15 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private boolean canUseFire;
     protected boolean isChangingRoom;
     private TextGraphics message;
-    private Sprite sprite;
+    private Sprite[][] sprites;
+    private Animation[] animations;
+
     /// Animation duration in frame number
 
     public ICRoguePlayerInteractionHandler handler;
     private String destinationRoom;
     private DiscreteCoordinates destinationCoordinates;
-    private final static int MOVE_DURATION = 8;
+    private final static int MOVE_DURATION = 6;
 
     private ArrayList<Integer> keys = new ArrayList<>();
     /**
@@ -48,7 +49,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         message = new TextGraphics(Integer.toString((int)hp), 0.4f, Color.BLUE);
         message.setParent(this);
         message.setAnchor(new Vector(-0.3f, 0.1f));
-        sprite = new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32), new Vector(.15f, -.15f));
+        sprites = Sprite.extractSprites("zelda/player", 4, 1, 2,this, 16, 32, new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT});
+        animations = Animation.createAnimations(MOVE_DURATION/2, sprites);
         handler = new ICRoguePlayerInteractionHandler();
         canUseFire = false;
         resetMotion();
@@ -63,11 +65,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
 
     @Override
     public void update(float deltaTime) {
-        /*if (hp > 0) {
-            hp -=deltaTime;
-            message.setText(Integer.toString((int)hp));
-        }
-        if (hp < 0) hp = 0.f;*/
         isChangingRoom = false;
         Keyboard keyboard= getOwnerArea().getKeyboard();
 
@@ -75,7 +72,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
-
+        if(isDisplacementOccurs()) {
+            animations[getOrientation().ordinal()].update(deltaTime);
+        }
+        else {
+            animations[getOrientation().ordinal()].reset();
+        }
         if(keyboard.get(Keyboard.X).isPressed() && canUseFire){
             getOwnerArea().registerActor(new Fire(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates()));
         }
@@ -91,12 +93,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
             if (!isDisplacementOccurs()) {
                 orientate(orientation);
                 move(MOVE_DURATION);
-            }
-            switch (orientation){
-                case DOWN -> sprite =  new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 0, 16, 32), new Vector(.15f, -.15f));
-                case RIGHT -> sprite =  new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 32, 16, 32), new Vector(.15f, -.15f));
-                case UP -> sprite =  new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 64, 16, 32), new Vector(.15f, -.15f));
-                case LEFT -> sprite =  new Sprite("zelda/player", .75f, 1.5f, this, new RegionOfInterest(0, 96, 16, 32), new Vector(.15f, -.15f));
             }
         }
     }
@@ -118,26 +114,22 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
      * @param position (DiscreteCoordinates): initial position, not null
      */
     public void enterArea(Area area, DiscreteCoordinates position){
+        ((ICRogueRoom)area).setVisited();
         area.registerActor(this);
-        //area.setViewCandidate(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
         resetMotion();
     }
-
+    public void takeDamages(float damage){
+        this.hp -= damage;
+    }
+    public float getHp(){
+            return hp;
+    }
     @Override
     public void draw(Canvas canvas) {
-        sprite.draw(canvas);
-        //message.draw(canvas);
+        animations[getOrientation().ordinal()].draw(canvas);
     }
-
-//    public boolean isWeak() {
-//        return (hp <= 0.f);
-//    }
-//
-//    public void strengthen() {
-//        hp = 10;
-//    }
 
     @Override
     public boolean takeCellSpace() {
@@ -208,7 +200,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
         @Override
         public void interactWith(Connector other, boolean isCellInteraction) {
-            System.out.println(isCellInteraction);
             if(!isCellInteraction){
                 int keyUsed = other.unLock(keys);
                 if(keyUsed!= -1){
@@ -219,6 +210,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
                 isChangingRoom = true;
                 destinationRoom = other.getDestination();
                 destinationCoordinates = other.getArrivalCoordinates();
+            }
+        }
+        @Override
+        public void interactWith(Turret other, boolean isCellInteraction) {
+            if(isCellInteraction){
+                other.kill();
             }
         }
     }

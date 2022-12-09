@@ -2,11 +2,12 @@ package ch.epfl.cs107.play.game.icrogue.area;
 
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Level {
+public abstract class Level implements Logic {
     protected ICRogueRoom[][] map;
     protected DiscreteCoordinates arrivalCoordinates;
     protected DiscreteCoordinates bossRoom;
@@ -50,6 +51,13 @@ public abstract class Level {
     protected void setRoomConnector(DiscreteCoordinates coords, String destination, ConnectorInRoom connector){
         setRoomConnector(coords, destination, connector, Connector.ICRogueConnectorState.INVISIBLE);
     }
+
+    /**
+     * @param coords Position de la salle
+     * @param destination Non de la salle d'arrivée
+     * @param connector Connecteur à modifier
+     * @param state état du connecteur (INVISIBLE, OPEN, CLOSE)
+     */
     protected void setRoomConnector(DiscreteCoordinates coords, String destination, ConnectorInRoom connector, Connector.ICRogueConnectorState state){
         setRoomConnectorDestination(coords, destination, connector);
         map[coords.x][coords.y].connectors.get(connector.getIndex()).closeConnector();
@@ -79,17 +87,20 @@ public abstract class Level {
         return arrivalCoordinates;
     }
 
-    /**
-     * @return List<ICRogueRoom> la liste de toutes les salles du niveau
-     */
-    public List<ICRogueRoom> getRooms(){
-        List<ICRogueRoom> result = new ArrayList<>();
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                if(map[i][j] != null) result.add(map[i][j]);
-            }
-        }
-        return result;
-    }
     protected abstract void generateFixedMap();
+
+    @Override
+    public boolean isOn() {
+        return (map[bossRoom.x][bossRoom.y]!=null&&map[bossRoom.x][bossRoom.y].isOn());
+    }
+
+    @Override
+    public boolean isOff() {
+        return !isOn();
+    }
+
+    @Override
+    public float getIntensity() {
+        return 0;
+    }
 }

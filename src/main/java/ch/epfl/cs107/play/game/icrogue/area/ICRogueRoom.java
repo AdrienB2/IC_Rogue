@@ -6,19 +6,20 @@ import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ICRogueRoom extends Area {
+public abstract class ICRogueRoom extends Area implements Logic {
 
     private ICRogueBehavior behavior;
 
     protected DiscreteCoordinates position;
     protected static String behaviorName;
     protected ArrayList<Connector> connectors = new ArrayList<>();
+    protected boolean isVisited;
 
     public ICRogueRoom(List<DiscreteCoordinates> connectorsCoordinates, List<Orientation> orientations, String behaviorName, DiscreteCoordinates roomCoordinates){
         this.behaviorName = behaviorName;
@@ -36,6 +37,9 @@ public abstract class ICRogueRoom extends Area {
      */
     protected abstract void createArea();
 
+    public void setVisited(){
+        this.isVisited = true;
+    }
     /// EnigmeArea extends Area
 
     @Override
@@ -64,22 +68,6 @@ public abstract class ICRogueRoom extends Area {
 
     @Override
     public void update(float deltaTime) {
-        Keyboard keyboard = getKeyboard();
-        if(keyboard.get(Keyboard.O).isPressed()){
-            for (Connector connector:
-                 connectors) {
-                connector.openConnector();
-            }
-        }
-        if (keyboard.get(Keyboard.L).isPressed()){
-            connectors.get(0).lockConnector(1);
-        }
-        if(keyboard.get(Keyboard.T).isPressed()){
-            for (Connector connector:
-                connectors) {
-            connector.switchState();
-        }
-        }
         super.update(deltaTime);
     }
 }
