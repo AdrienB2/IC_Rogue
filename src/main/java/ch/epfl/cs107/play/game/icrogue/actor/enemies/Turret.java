@@ -7,12 +7,6 @@ import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Arrow;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RegionOfInterest;
-import ch.epfl.cs107.play.math.Vector;
-import ch.epfl.cs107.play.window.Canvas;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Turret  extends Enemy{
     private Orientation[] directions;
@@ -42,7 +36,7 @@ public class Turret  extends Enemy{
                 this.counter = 0;
             }
         }
-        if(getIsDead()){
+        if(isDead()){
             getOwnerArea().unregisterActor(this);
         }
         super.update(deltaTime);

@@ -11,6 +11,11 @@ import java.util.List;
 
 public class Staff extends Item{
 
+    /**
+     * @param area (Area): Owner area. Not null
+     * @param position (Coordinate): Initial position of the entity. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     */
     public Staff(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
         setSprite(new Sprite("zelda/staff_water.icon", 1, 1, this));

@@ -26,29 +26,48 @@ public class Connector extends AreaEntity {
     private DiscreteCoordinates arrivalCoordinates;
     private int keyID;
     private Sprite sprite;
+
     /**
-     * Default AreaEntity constructor
-     *
-     * @param area        (Area): Owner area. Not null
-     * @param orientation (Orientation): Initial orientation of the entity in the Area. Not null
-     * @param position    (DiscreteCoordinate): Initial position of the entity in the Area. Not null
+     * @param area
+     * @param orientation
+     * @param position
+     * @param state
+     * @param destination
+     * @param arrivalCoordinates
+     * @param keyID
      */
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates, int keyID) {
         super(area, orientation, position);
         this.state = state;
         this.destination = destination;
         this.arrivalCoordinates = arrivalCoordinates;
-        this.keyID = keyID;
-        this.sprite = selectSprite(state);
+        this.sprite = selectSprite();
     }
+
+    /**
+     * @param area        (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param position    (Coordinate) : Initial position of the entity. Not null
+     * @param state       (ICRogueConnectorState) : état du connector
+     * @param destination (String) : Nom de la salle d'arrivé
+     * @param arrivalCoordinates (DiscreteCoordinates) : Coordonnées dans la salle d'arrivée
+     */
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates) {
         this(area, orientation,position, state, destination, arrivalCoordinates, NO_KEY_ID);
     }
 
+    /**
+     * Setter des coordonnées dans la salle d'arrivée
+     * @param arrivalCoordinates (DiscreteCoordinates) : Coordonnées dans la salle d'arrivée
+     */
     public void setArrivalCoordinates(DiscreteCoordinates arrivalCoordinates) {
         this.arrivalCoordinates = arrivalCoordinates;
     }
 
+    /**
+     * Getter des coordonnées dans la salle d'arrivée
+     * @return (DiscreteCoordinates) : Coordonnées dans la salle d'arrivée
+     */
     public DiscreteCoordinates getArrivalCoordinates(){
         return arrivalCoordinates;
     }
@@ -66,8 +85,12 @@ public class Connector extends AreaEntity {
         return List.of(coord, coord.jump(new Vector((getOrientation().ordinal()+1)%2, getOrientation().ordinal()%2)));
     }
 
-    private Sprite selectSprite(ICRogueConnectorState state){
-        switch (state){
+    /**
+     * Retourne le sprite à afficher en fonction de l'état et de l'orientation du connecteur
+     * @return (Sprite) : Sprite du connecteur
+     */
+    private Sprite selectSprite(){
+        switch (this.state){
             case CLOSED -> {
                 return new Sprite("icrogue/door_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
             }
@@ -84,7 +107,7 @@ public class Connector extends AreaEntity {
     }
     public void setState(ICRogueConnectorState state){
         this.state = state;
-        sprite = selectSprite(state);
+        sprite = selectSprite();
     }
     @Override
     public boolean isCellInteractable() {
@@ -100,20 +123,38 @@ public class Connector extends AreaEntity {
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
+
+    /**
+     * Ouvre le connecteur s'il n'est pas verrouillé ou invisible
+     */
     public void openConnector(){
         if (this.state != ICRogueConnectorState.LOCKED && this.state !=ICRogueConnectorState.INVISIBLE) {
             this.state = ICRogueConnectorState.OPEN;
         }
     }
+
+    /**
+     * Ferme le connecteur (sauf si le connecteur est verrouillé)
+     */
     public void closeConnector(){
         if(this.state != ICRogueConnectorState.LOCKED) this.state = ICRogueConnectorState.CLOSED;
     }
+
+    /**
+     * Verrouille le connecteur
+     * @param id (int) : Identificateur de la clé
+     */
     public void lockConnector(int id){
         this.state = ICRogueConnectorState.LOCKED;
         this.keyID = id;
-        this.sprite = selectSprite(state);
+        this.sprite = selectSprite();
     }
 
+    /**
+     * Déverrouille le connecteur
+     * @param playerKeys (List<Integer>) Liste des clés du joueur
+     * @return (int) index de la clé utilisé dans la liste de clé du joueur si le joueur possède la clé, -1 si le joueur n'a pas la bonne clé
+     */
     public int unLock(List<Integer> playerKeys){
         if(keyID == Integer.MAX_VALUE){
             state = ICRogueConnectorState.OPEN;
@@ -127,14 +168,19 @@ public class Connector extends AreaEntity {
         }
         return -1;
     }
-    public void switchState(){
-        if(this.state == ICRogueConnectorState.OPEN) this.state=ICRogueConnectorState.CLOSED;
-        else if (this.state == ICRogueConnectorState.CLOSED) this.state = ICRogueConnectorState.OPEN;
-    }
 
+    /**
+     * Setter de la destination du connecteur
+     * @param destination (String) Nom de la salle d'arrivée
+     */
     public void setDestination(String destination){
         this.destination = destination;
     }
+
+    /**
+     * Getter de la destination du connecteur
+     * @return (String) Nom de la salle d'arrivée
+     */
     public String getDestination(){
         return destination;
     }

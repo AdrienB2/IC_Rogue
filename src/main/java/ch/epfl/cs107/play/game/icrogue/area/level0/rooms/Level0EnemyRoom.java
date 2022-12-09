@@ -3,9 +3,7 @@ package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Enemy;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import javax.naming.InitialContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Level0EnemyRoom extends Level0Room{
@@ -32,7 +30,7 @@ public abstract class Level0EnemyRoom extends Level0Room{
         ArrayList<Enemy> killedEnemies = new ArrayList<>();
         for (Enemy enemi:
              enemies) {
-            if (enemi.getIsDead()) {
+            if (enemi.isDead()) {
                 killedEnemies.add(enemi);
             }
         }

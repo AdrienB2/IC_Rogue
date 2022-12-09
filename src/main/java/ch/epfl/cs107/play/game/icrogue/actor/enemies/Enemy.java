@@ -26,13 +26,24 @@ public abstract class Enemy extends ICRogueActor {
         isDead = false;
     }
 
-    public boolean getIsDead(){
+    /**
+     * @return (boolean) True si l'ennemi est mort false sinon
+     */
+    public boolean isDead(){
         return isDead;
     }
+
+    /**
+     * Tue l'ennemi
+     */
     public void kill(){
         isDead = true;
     }
 
+    /**
+     * Setter du sprite de l'ennemi
+     * @param sprite Sprite de l'ennemi
+     */
     public void setSprite(Sprite sprite){
         this.sprite = sprite;
     }

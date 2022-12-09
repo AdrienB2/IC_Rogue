@@ -12,6 +12,11 @@ import java.util.List;
 
 public class Cherry extends Item{
 
+    /**
+     * @param area (Area): Owner area. Not null
+     * @param position (Coordinate): Initial position of the entity. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     */
     public Cherry(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position);
         setSprite(new Sprite("icrogue/cherry", 0.6f, 0.6f, this));

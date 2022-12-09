@@ -104,12 +104,15 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         getOwnerArea().unregisterActor(this);
     }
 
+    /**
+     * Indique si le joueur est en train de changer de salle
+     * @return (boolean) : True si le joueur change de salle, false sinon
+     */
     public boolean isChangingRoom() {
         return isChangingRoom;
     }
 
     /**
-     *
      * @param area (Area): initial area, not null
      * @param position (DiscreteCoordinates): initial position, not null
      */
@@ -120,9 +123,19 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         setCurrentPosition(position.toVector());
         resetMotion();
     }
+
+    /**
+     * Inflige un certain nombre de points de dommage au joueur
+     * @param damage (float) : nombre de points de dommage infligé
+     */
     public void takeDamages(float damage){
         this.hp -= damage;
     }
+
+    /**
+     * Getter du nombre de points de vie
+     * @return (float) : nombre de points de vie restant au joueur
+     */
     public float getHp(){
             return hp;
     }
@@ -166,9 +179,18 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         return keyboard.get(Keyboard.W).isDown();
     }
 
+    /**
+     * Getter du nom de la salle d'arrivée
+     * @return (String) : Nom de la salle dans laquelle le joueur essaie d'aller
+     */
     public String getDestinationRoom(){
         return destinationRoom;
     }
+
+    /**
+     * Getter des coordonnées dans la salle d'arrivée
+     * @return (DiscreteCoordinates) : Coordonnées d'arrivée dans la salle dans laquelle le joueur essaie d'aller
+     */
     public DiscreteCoordinates getArrivalCoordinate(){
         return destinationCoordinates;
     }
