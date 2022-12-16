@@ -1,9 +1,8 @@
-package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
+package ch.epfl.cs107.play.game.icrogue.area.level1.rooms;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
-import ch.epfl.cs107.play.game.icrogue.actor.enemies.Log;
 import ch.epfl.cs107.play.game.icrogue.area.ConnectorInRoom;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -11,7 +10,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level0Room extends ICRogueRoom {
+public class Level1Room extends ICRogueRoom {
     @Override
     public boolean isOn() {
         return true;
@@ -52,7 +51,7 @@ public class Level0Room extends ICRogueRoom {
         }
         public static List<Orientation> getAllConnectorsOrientation(){
             List<Orientation> orientations = new ArrayList<>();
-            for(Level0Connectors connector:Level0Connectors.values()){
+            for(Level0Connectors connector: Level0Connectors.values()){
                 orientations.add(connector.orientation);
             }
             return orientations;
@@ -62,14 +61,14 @@ public class Level0Room extends ICRogueRoom {
         }
         public static List<DiscreteCoordinates> getAllConnectorsPosition(){
             List<DiscreteCoordinates> coordinates = new ArrayList<>();
-            for(Level0Connectors connector:Level0Connectors.values()){
+            for(Level0Connectors connector: Level0Connectors.values()){
                 coordinates.add(connector.coordinates);
             }
             return coordinates;
         }
     }
 
-    public Level0Room(DiscreteCoordinates roomCoordinates){
+    public Level1Room(DiscreteCoordinates roomCoordinates){
         super(Level0Connectors.getAllConnectorsPosition(), Level0Connectors.getAllConnectorsOrientation(),"icrogue/Level0Room", roomCoordinates);
     }
 

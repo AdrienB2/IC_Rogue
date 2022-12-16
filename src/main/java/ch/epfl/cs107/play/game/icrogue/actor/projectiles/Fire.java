@@ -2,11 +2,11 @@ package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
-import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
+import ch.epfl.cs107.play.game.icrogue.actor.enemies.Log;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -15,7 +15,7 @@ import ch.epfl.cs107.play.math.Vector;
 import java.util.Collections;
 import java.util.List;
 
-public class Fire extends Projectile implements Interactor {
+public class Fire extends Projectile {
 
     private FireInteractionHandler handler;
 
@@ -28,16 +28,6 @@ public class Fire extends Projectile implements Interactor {
         super(area, orientation, position, 1, 5);
         handler = new FireInteractionHandler();
         setSprite(new Sprite("zelda/fire", 1f, 1f, this, new RegionOfInterest(0, 0, 16, 16), new Vector(0, 0)));
-    }
-
-    @Override
-    public boolean isCellInteractable() {
-        return !isConsumed();
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
     }
 
     @Override
@@ -58,16 +48,6 @@ public class Fire extends Projectile implements Interactor {
     }
 
     @Override
-    public boolean wantsCellInteraction() {
-        return !isConsumed();
-    }
-
-    @Override
-    public boolean wantsViewInteraction() {
-        return false;
-    }
-
-    @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
         other.acceptInteraction(handler, isCellInteraction);
     }
@@ -82,8 +62,17 @@ public class Fire extends Projectile implements Interactor {
 
         @Override
         public void interactWith(Turret other, boolean isCellInteraction) {
-            other.kill();
-            consume();
+            if(isCellInteraction){
+                other.kill();
+                consume();
+            }
+        }
+        @Override
+        public void interactWith(Log other, boolean isCellInteraction) {
+            if(isCellInteraction){
+                other.kill();
+                consume();
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
+import ch.epfl.cs107.play.game.icrogue.actor.items.Heal;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
@@ -24,7 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor{
-    private float hp;
+    private int hp;
+    private int maxHP = 10;
     private boolean canUseFire;
     protected boolean isChangingRoom;
     private TextGraphics message;
@@ -52,7 +54,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         sprites = Sprite.extractSprites("zelda/player", 4, 1, 2,this, 16, 32, new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT});
         animations = Animation.createAnimations(MOVE_DURATION/2, sprites);
         handler = new ICRoguePlayerInteractionHandler();
-        canUseFire = false;
+        canUseFire = true;
         resetMotion();
     }
 
@@ -167,6 +169,12 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
+    public void heal(int hpGiven){
+        hp += hpGiven;
+        if(hp>maxHP){
+            hp = maxHP;
+        }
+    }
 
     @Override
     public boolean wantsCellInteraction() {
@@ -207,8 +215,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
 
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
         @Override
-        public void interactWith(Cherry other, boolean isCellInteraction) {
+        public void interactWith(Heal other, boolean isCellInteraction) {
             other.collect();
+            heal(other.getHpGiven());
         }
         @Override
         public void interactWith(Staff other, boolean isCellInteraction) {

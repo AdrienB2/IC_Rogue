@@ -5,6 +5,7 @@ import ch.epfl.cs107.play.game.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
@@ -20,7 +21,7 @@ public class Connector extends AreaEntity {
         INVISIBLE;
     }
 
-    private static int NO_KEY_ID = Integer.MAX_VALUE;
+    public static int NO_KEY_ID = Integer.MAX_VALUE;
     private ICRogueConnectorState state;
     private String destination;
     private DiscreteCoordinates arrivalCoordinates;
@@ -90,15 +91,20 @@ public class Connector extends AreaEntity {
      * @return (Sprite) : Sprite du connecteur
      */
     private Sprite selectSprite(){
+        Sprite sprite;
         switch (this.state){
             case CLOSED -> {
-                return new Sprite("icrogue/door_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+                sprite = new Sprite("icrogue/door_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
             }
             case LOCKED -> {
-                return new Sprite("icrogue/lockedDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+                sprite = new Sprite("icrogue/lockedDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+            }
+            default -> {
+                sprite =  new Sprite("icrogue/invisibleDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
             }
         }
-        return new Sprite("icrogue/invisibleDoor_"+this.getOrientation().opposite().ordinal(), (this.getOrientation().ordinal()+1)%2+1, this.getOrientation().ordinal()%2+1, this);
+        sprite.setDepth(-1);
+        return sprite;
     }
 
     @Override
@@ -156,6 +162,7 @@ public class Connector extends AreaEntity {
      * @return (int) index de la clé utilisé dans la liste de clé du joueur si le joueur possède la clé, -1 si le joueur n'a pas la bonne clé
      */
     public int unLock(List<Integer> playerKeys){
+        if(!((ICRogueRoom) getOwnerArea()).isOn())return-1;
         if(keyID == Integer.MAX_VALUE){
             state = ICRogueConnectorState.OPEN;
             return -1;

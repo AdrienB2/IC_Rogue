@@ -1,18 +1,23 @@
 package ch.epfl.cs107.play.game.icrogue.actor.enemies;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Enemy extends ICRogueActor {
     private boolean isDead;
-    private Sprite sprite;
+    private Sprite[][] sprites;
+    private Animation[] animations;
+    private int currentAnim;
+    protected int MOVE_DURATION = 6;
 
     /**
      * Default MovableAreaEntity constructor
@@ -45,12 +50,30 @@ public abstract class Enemy extends ICRogueActor {
      * @param sprite Sprite de l'ennemi
      */
     public void setSprite(Sprite sprite){
-        this.sprite = sprite;
+        this.sprites = new Sprite[][] {{sprite}};
+        animations = new Animation[1];
+        animations[0] = new Animation(MOVE_DURATION/2, this.sprites[0]);
+        currentAnim = 0;
+    }
+    public void setSprites(Sprite[][] sprites){
+        this.sprites = sprites;
+        animations = Animation.createAnimations(MOVE_DURATION/2, this.sprites, true);
+    }
+    @Override
+    public void draw(Canvas canvas) {
+        animations[currentAnim].draw(canvas);
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        sprite.draw(canvas);
+    public void update(float deltaTime) {
+        currentAnim = this.getOrientation().ordinal();
+        if(this.isDisplacementOccurs()){
+            animations[currentAnim].update(deltaTime);
+        }
+        else {
+            animations[currentAnim].switchPause();
+        }
+        super.update(deltaTime);
     }
 
     @Override

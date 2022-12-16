@@ -1,17 +1,18 @@
-package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
+package ch.epfl.cs107.play.game.icrogue.area.level1.rooms;
 
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Enemy;
 import ch.epfl.cs107.play.game.icrogue.actor.items.Heart;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Level0EnemyRoom extends Level0Room{
+public abstract class Level1EnemyRoom extends Level1Room {
     private List<Enemy> enemies = new ArrayList<>();
     private boolean isHeartGiven = false;
-    public Level0EnemyRoom(DiscreteCoordinates roomCoordinates) {
+    public Level1EnemyRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
     }
  protected void setEnemies(List<Enemy> enemies){

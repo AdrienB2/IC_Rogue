@@ -7,7 +7,6 @@ import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
-import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,10 @@ import java.util.List;
 public abstract class ICRogueRoom extends Area implements Logic {
 
     private ICRogueBehavior behavior;
+
+    public DiscreteCoordinates getPosition() {
+        return position;
+    }
 
     protected DiscreteCoordinates position;
     protected static String behaviorName;

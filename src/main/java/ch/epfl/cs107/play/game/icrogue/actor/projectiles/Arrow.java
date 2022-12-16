@@ -15,7 +15,7 @@ import ch.epfl.cs107.play.math.Vector;
 import java.util.Collections;
 import java.util.List;
 
-public class Arrow extends Projectile implements Interactor {
+public class Arrow extends Projectile {
 
     private ArrowInteractionHandler handler;
 
@@ -30,14 +30,6 @@ public class Arrow extends Projectile implements Interactor {
         setSprite(new Sprite("zelda/arrow", 1f, 1f, this,
                 new RegionOfInterest(32*orientation.ordinal(), 0, 32, 32),
                 new Vector(0, 0)));
-    }
-
-    @Override
-    public boolean isCellInteractable() { return true; }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
     }
 
     @Override
@@ -57,15 +49,6 @@ public class Arrow extends Projectile implements Interactor {
         return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
 
-    @Override
-    public boolean wantsCellInteraction() {
-        return !isConsumed();
-    }
-
-    @Override
-    public boolean wantsViewInteraction() {
-        return false;
-    }
 
     @Override
     public boolean takeCellSpace() {
@@ -87,9 +70,10 @@ public class Arrow extends Projectile implements Interactor {
 
         @Override
         public void interactWith(ICRoguePlayer other, boolean isCellInteraction) {
-            System.out.println("PLAYER");
-            other.takeDamages(damage);
-            consume();
+            if(isCellInteraction) {
+                other.takeDamages(damage);
+                consume();
+            }
         }
     }
 }

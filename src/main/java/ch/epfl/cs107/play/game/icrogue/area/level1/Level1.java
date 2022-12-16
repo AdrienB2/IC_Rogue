@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.icrogue.area.level0;
+package ch.epfl.cs107.play.game.icrogue.area.level1;
 
 import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
@@ -8,11 +8,12 @@ import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0KeyRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
 import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurretRoom;
+import ch.epfl.cs107.play.game.icrogue.area.level1.rooms.Level1LogRoom;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-public class Level0 extends Level {
+public class Level1 extends Level {
     private int bossKeyId = 1;
-    public Level0(ICRogue game) {
+    public Level1(ICRogue game) {
         super(true, new DiscreteCoordinates(1,5), RoomType.getDistributionList(), 4,2);
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -44,7 +45,7 @@ public class Level0 extends Level {
             case BOSS_KEY -> {
                 setRoom(roomCoordinates, new Level0KeyRoom(roomCoordinates, bossKeyId));}
             case SPAWN -> {
-                setRoom(roomCoordinates, new Level0Room(roomCoordinates));
+                setRoom(roomCoordinates, new Level1LogRoom(roomCoordinates));
                 setFirstRoomTitle(roomCoordinates);
             }
             default -> {

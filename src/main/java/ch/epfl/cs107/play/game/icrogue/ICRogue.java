@@ -1,10 +1,13 @@
 package ch.epfl.cs107.play.game.icrogue;
 
+import ch.epfl.cs107.play.game.PauseMenu;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
-import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
+import ch.epfl.cs107.play.game.icrogue.area.Level;
+import ch.epfl.cs107.play.game.icrogue.area.level1.Level1;
+import ch.epfl.cs107.play.game.icrogue.hud.HUD;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -16,19 +19,16 @@ public class ICRogue extends AreaGame {
 
     private Area currentArea;
     private ICRoguePlayer player;
-    private Level0 level;
+    private Level level;
+    private HUD hud;
 
     private void initLevel(){
-        level = new Level0(this);
-
+        level = new Level1(this);
         currentArea = setCurrentArea(level.getFirstRoomTitle(), true);
         player = new ICRoguePlayer(currentArea, Orientation.UP, new DiscreteCoordinates(2,2), "zelda/player");
         player.enterArea(currentArea, new DiscreteCoordinates(2,2));
-    }
-    private  void reset(){
-        setCurrentArea(currentArea.getTitle(), true);
-        player = new ICRoguePlayer(currentArea, Orientation.DOWN, new DiscreteCoordinates(2,2), "zelda/player");
-        player.enterArea(currentArea, new DiscreteCoordinates(2,2));
+        hud = new HUD(this);
+        currentArea.registerActor(hud);
     }
 
     @Override
@@ -54,9 +54,8 @@ public class ICRogue extends AreaGame {
     @Override
     public void update(float deltaTime) {
         Keyboard keyboard = getWindow().getKeyboard();
-        if(keyboard.get(Keyboard.R).isDown()){
-            reset();
-        }
+        hud.updateHUD((int) player.getHp());
+
         if(player.isChangingRoom()){
             switchRoom(player.getDestinationRoom(), player.getArrivalCoordinate());
         }
@@ -80,8 +79,10 @@ public class ICRogue extends AreaGame {
         return "ICRogue";
     }
     protected void switchRoom(String destinationRoom, DiscreteCoordinates playerArrivalCoordinates){
+        currentArea.unregisterActor(hud);
         player.leaveArea();
         currentArea = setCurrentArea(destinationRoom, false);
+        currentArea.registerActor(hud);
         player.enterArea(currentArea, playerArrivalCoordinates);
     }
 }
