@@ -6,6 +6,8 @@
 - ESCAPE : Pause/reprendre le jeu
 - ENTER : Permet de passer au niveau suivant (sur l'écran de victoire) / recommencer au 1er niveau (sur l'écran de Game Over)
 
+
+jeton Celio : lev4Bopi 
 ---
 
 ## Enemies
