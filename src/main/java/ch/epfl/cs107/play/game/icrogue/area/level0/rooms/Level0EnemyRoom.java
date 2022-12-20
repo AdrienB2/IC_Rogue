@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class Level0EnemyRoom extends Level0Room{
     private List<Enemy> enemies = new ArrayList<>();
     private boolean isHeartGiven = false;
+    private Heart heart;
     public Level0EnemyRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
     }
@@ -42,7 +43,7 @@ public abstract class Level0EnemyRoom extends Level0Room{
             enemies.remove(killedEnemy);
         }
         if(enemies.size() == 0 && !isHeartGiven){
-            Heart heart = new Heart(this, Orientation.UP, new DiscreteCoordinates(5,5));
+            heart = new Heart(this, Orientation.UP, new DiscreteCoordinates(5,5));
             isHeartGiven= true;
             registerActor(heart);
         }
@@ -51,6 +52,6 @@ public abstract class Level0EnemyRoom extends Level0Room{
 
     @Override
     public boolean isOn() {
-        return enemies.size() == 0 && isVisited;
+        return enemies.size() == 0 && isVisited && isHeartGiven && heart.isCollected();
     }
 }

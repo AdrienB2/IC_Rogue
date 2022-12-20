@@ -18,7 +18,7 @@ public class Log extends Enemy {
     private DiscreteCoordinates[] targetsPositions;
     private Queue<Orientation> path;
     private int currentDestination = 0;
-    private final float COOLDOWN = 10;
+    private final float COOLDOWN = 1f;
     private float counter;
 
     /**
@@ -28,11 +28,15 @@ public class Log extends Enemy {
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
      */
-    public Log(Area area, Orientation orientation, DiscreteCoordinates position) {
+    public Log(Area area, Orientation orientation, DiscreteCoordinates position, AreaGraph graph) {
         super(area, orientation, position);
         MOVE_DURATION = 6;
-        setSprites(Sprite.extractSprites("zelda/logMonster", 4, 1.5f, 1.5f, this, 32,32, new Orientation[]{Orientation.DOWN, Orientation.UP, Orientation.RIGHT, Orientation.LEFT}));
-        graph = new ICRogueAreaGraph(10, 10);
+        setSprites(Sprite.extractSprites("zelda/logMonster", 4, 1.5f, 1.5f, this, 32,32, new Orientation[]{
+                Orientation.RIGHT,
+                Orientation.LEFT,
+                Orientation.UP,
+                Orientation.DOWN}));
+        this.graph = graph;
         targetsPositions = new DiscreteCoordinates[] {
                 new DiscreteCoordinates(1,1),
                 new DiscreteCoordinates(1,8),
@@ -61,7 +65,7 @@ public class Log extends Enemy {
 
     @Override
     public void update(float deltaTime) {
-        this.counter-=1;
+        this.counter+=deltaTime;
         if(path.size() == 0){
             getNextTarget();
         }
@@ -72,10 +76,10 @@ public class Log extends Enemy {
             getOwnerArea().unregisterActor(this);
         }
 
-        if(this.counter <= 0){
+        if(this.counter >= COOLDOWN){
             getOwnerArea().registerActor(new Arrow(getOwnerArea(),
                     getArrowOrientation() , getCurrentMainCellCoordinates().jump(getOrientation().toVector())));
-            this.counter = COOLDOWN;
+            this.counter = 0;
         }
         super.update(deltaTime);
     }

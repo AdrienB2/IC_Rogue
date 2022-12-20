@@ -4,12 +4,12 @@ import ch.epfl.cs107.play.game.actor.Entity;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
-public class PlayerHpDisplay extends Entity {
+public class PlayerHpDisplayHUD extends Entity {
     private HeartIconHUD[] heartsDisplay = new HeartIconHUD[5];
     /**
      * Default Entity constructor
      */
-    public PlayerHpDisplay() {
+    public PlayerHpDisplayHUD() {
         super(new DiscreteCoordinates(0,9).toVector());
         for (int i = 0; i < 5; i++) {
             heartsDisplay[i] = new HeartIconHUD(i);

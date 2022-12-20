@@ -5,10 +5,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Cherry;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Heal;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Key;
-import ch.epfl.cs107.play.game.icrogue.actor.items.Staff;
+import ch.epfl.cs107.play.game.icrogue.actor.items.*;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
@@ -26,10 +23,10 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private int hp;
+    private int money = 0;
     private int maxHP = 10;
     private boolean canUseFire;
     protected boolean isChangingRoom;
-    private TextGraphics message;
     private Sprite[][] sprites;
     private Animation[] animations;
 
@@ -48,9 +45,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     public ICRoguePlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
         super(owner, orientation, coordinates);
         this.hp = 10;
-        message = new TextGraphics(Integer.toString((int)hp), 0.4f, Color.BLUE);
-        message.setParent(this);
-        message.setAnchor(new Vector(-0.3f, 0.1f));
         sprites = Sprite.extractSprites("zelda/player", 4, 1, 2,this, 16, 32, new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT});
         animations = Animation.createAnimations(MOVE_DURATION/2, sprites);
         handler = new ICRoguePlayerInteractionHandler();
@@ -176,6 +170,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
     }
 
+    public boolean hasKey(){
+        return this.keys.size() > 0;
+    }
+
     @Override
     public boolean wantsCellInteraction() {
         return true;
@@ -229,6 +227,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
             other.collect();
             keys.add(other.getId());
         }
+
+        @Override
+        public void interactWith(Coin other, boolean isCellInteraction) {
+            money += other.getValue();
+            other.collect();
+        }
+
         @Override
         public void interactWith(Connector other, boolean isCellInteraction) {
             if(!isCellInteraction){
@@ -245,9 +250,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
         @Override
         public void interactWith(Turret other, boolean isCellInteraction) {
-            if(isCellInteraction){
-                other.kill();
-            }
+            other.kill();
         }
     }
 }

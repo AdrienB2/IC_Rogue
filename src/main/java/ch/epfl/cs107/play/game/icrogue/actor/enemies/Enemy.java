@@ -49,15 +49,22 @@ public abstract class Enemy extends ICRogueActor {
      * Setter du sprite de l'ennemi
      * @param sprite Sprite de l'ennemi
      */
-    public void setSprite(Sprite sprite){
+    protected void setSprite(Sprite sprite){
         this.sprites = new Sprite[][] {{sprite}};
         animations = new Animation[1];
         animations[0] = new Animation(MOVE_DURATION/2, this.sprites[0]);
         currentAnim = 0;
     }
-    public void setSprites(Sprite[][] sprites){
+    protected void setSprites(Sprite[][] sprites){
         this.sprites = sprites;
         animations = Animation.createAnimations(MOVE_DURATION/2, this.sprites, true);
+    }
+    protected void setSpritesDepth(float depth){
+        for (int i = 0; i < sprites.length; i++) {
+            for (int j = 0; j < sprites[i].length; j++) {
+                sprites[i][j].setDepth(depth);
+            }
+        }
     }
     @Override
     public void draw(Canvas canvas) {

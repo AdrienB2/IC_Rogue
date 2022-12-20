@@ -55,7 +55,7 @@ public class Turret  extends Enemy{
 
     @Override
     public boolean isViewInteractable() {
-        return false;
+        return true;
     }
 
     @Override

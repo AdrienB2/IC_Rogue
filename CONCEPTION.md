@@ -6,7 +6,7 @@ Cette classe comme toutes les autres liés au HUD se trouvent dans le package `g
 ### HeartIconHUD
 Cette classe est une `Entity`. Cette classe représente un cœur qui sera affiché dans la barre de vie du joueur. Cette classe contient les 3 sprites possibles :
 ![coeur vide, demi coeur, coeur complet](src/main/res/images/sprites/zelda/heartDisplay.png)
-### PlayerHpDisplay
+### PlayerHpDisplayHUD
 Cette classe est une `Entity`. Elle contient un array de 5 `HeartIconHUD`. Elle s'occupe de choisir le sprite à afficher pour chaque cœur en fonction du nombre de point de vie du joueur.
 
 Une instance de cette classe est utilisée dans la classe HUD pour être affichée.
@@ -38,3 +38,4 @@ Cette classe se trouve dans `game.icrogue`
 ## Ennemis
 Nous avons ajouté different ennemis. Toutes les classes se trouvent dans `game.icrogue.actor.enemies`:
 - Log : se déplace en suivant un trajet prédéfinit et tire des flèches
+- FlameSkull : se déplace en direction le joueur et donne 1pt de damage s'il le touche (fonctionne +ou-)
