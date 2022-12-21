@@ -35,6 +35,12 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         this.moveDuration = moveDuration;
         this.isConsumed = false;
     }
+
+    /**
+     * @param area (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity. Not null
+     * @param position (DisceteCoordinate): Initial position of the entity. Not null
+     */
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position){
         this(area, orientation, position, DEFAULT_DAMAGE, DEFAULT_MOVE_DURATION);
     }
@@ -69,6 +75,14 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
         this.sprites = new Sprite[]{sprite};
         this.animation = new Animation(3, this.sprites, true);
     }
+
+    /**
+     * Setter des sprites du projectile si le projectile a des animations
+     * @param sprites (Sprite[]) : sprites du projectile
+     * @param repeatAnimation (boolean) : indique si l'animation doit être répétée
+     * @param inverseSprites (boolean) : indique si les sprites doivent être inversés
+     * @param frameDuration (int) : durée d'une frame
+     */
     public void setSprites(Sprite[] sprites, boolean repeatAnimation, boolean inverseSprites, int frameDuration){
         this.sprites = sprites;
         if(inverseSprites) {
@@ -81,6 +95,8 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
 
         this.animation = new Animation(frameDuration, this.sprites, repeatAnimation);
     }
+
+
     @Override
     public void consume() {
         this.isConsumed = true;

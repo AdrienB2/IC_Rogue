@@ -9,6 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Level0TurretRoom extends Level0EnemyRoom{
     /**
      * Position prédéfinie des ennemis "Turret"
@@ -128,11 +129,17 @@ public class Level0TurretRoom extends Level0EnemyRoom{
             }
     };
 
+    /**
+     * @param roomCoordinates Position de la salle
+     */
     public Level0TurretRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
        setEnemies(generateEnemiesList());
     }
 
+    /**
+     * @return Retourne la liste des ennemies
+     */
     public List<Enemy> generateEnemiesList(){
         //choisit un des patterns de la liste
         int pattern = RandomHelper.roomGenerator.nextInt(0, TURRET_COORDINATES_PATTERNS.length);

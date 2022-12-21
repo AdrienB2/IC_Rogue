@@ -9,6 +9,9 @@ import ch.epfl.cs107.play.window.Window;
 
 import java.awt.*;
 
+/**
+ * Ecran de pause
+ */
 public class PauseScreen extends Area {
 
     private String text = "PAUSE";

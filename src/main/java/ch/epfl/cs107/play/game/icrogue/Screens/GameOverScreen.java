@@ -8,6 +8,9 @@ import ch.epfl.cs107.play.window.Window;
 
 import java.awt.*;
 
+/**
+ * Ecran de fin
+ */
 public class GameOverScreen extends Area {
 
     private String text = "GAME OVER";

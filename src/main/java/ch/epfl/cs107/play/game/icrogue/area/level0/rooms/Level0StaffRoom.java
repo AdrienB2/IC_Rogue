@@ -6,6 +6,9 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Level0StaffRoom extends Level0ItemRoom{
 
+    /**
+     * @param roomCoordinates Position de la salle
+     */
     public Level0StaffRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
         addItem(new Staff(this, Orientation.DOWN, new DiscreteCoordinates(5,5)));

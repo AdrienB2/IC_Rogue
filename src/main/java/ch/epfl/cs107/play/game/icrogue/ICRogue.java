@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.icrogue;
 
 
+import ch.epfl.cs107.play.game.Sound;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
@@ -20,7 +21,7 @@ import ch.epfl.cs107.play.window.Window;
 
 public class ICRogue extends AreaGame {
     public final static float CAMERA_SCALE_FACTOR = 13.f;
-
+    public static Sound sound = new Sound();
     private Area currentArea;
     private ICRoguePlayer player;
     private Level level;
@@ -31,6 +32,7 @@ public class ICRogue extends AreaGame {
     private int levelToLoad = 0;
 
     private void initLevel(){
+        playMusic(0);
         winScreen = false;
         gameOver = false;
         level = loadLevel();
@@ -134,5 +136,24 @@ public class ICRogue extends AreaGame {
         if(currentArea instanceof ICRogueRoom && (level).isBoosRoom(((ICRogueRoom)currentArea).getPosition())){
             ((ICRogueRoom)currentArea).setPlayer(player);
         }
+    }
+
+    /**
+     * @param i est la valeur a la quelle le son correspond dans Sound.
+     *          La méthode lance la music en la jouant en boucle.
+     */
+    public static void playMusic(int i){
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+
+    /**
+     * @param i est la valeur a la quelle le son correspond dans Sound.
+     *          La méthode lance le son (sound effect) une seule fois.
+     */
+    public static void playSE(int i) {
+        sound.setFile(i);
+        sound.play();
     }
 }

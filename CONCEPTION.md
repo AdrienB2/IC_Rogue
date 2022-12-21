@@ -57,4 +57,26 @@ Nous avons ajouté 3 écrans :
 - `GameOverScreen` : affiché lorsque le joueur a perdu
 - `PauseScreen` : affiché lorsque le joueur appuie sur la touche ESCAPE
 Ces 3 écrans se trouvent dans `game.icrogue.screens` l'affichage de ces écrans se fait dans `ICRogue`.
-Le texte est affiché en utilisant un `Text` par lettre. Cela est dû à un problème d'affichage de texte que nous avons rencontré ([c.f. la question sur EdStem](https://edstem.org/eu/courses/53/discussion/15610?comment=27297))
+Le texte est affiché en utilisant un `Text` par lettre. Cela est dû à un problème d'affichage de texte que nous avons rencontré ([c.f. la question sur EdStem](https://edstem.org/eu/courses/53/discussion/15610?comment=27297)) de plus, cela nous permet de faire un effet d'apparition du texte lettre par lettre.****
+
+---
+## Sounds
+
+Différents sons ont été ajoutés afin de rendre le jeu plus immersif :
+- 'Musique de background' - "music.wav" tout au long de l'aventure, une musique d'ambiance se jouera en fond.
+                            cette musique utilise `playMusic()` afin de jouer le son en boucle. (loop). 
+- 
+Les exemples de sons suivant utiliserons `playSE()` qui jouera une seul fois le sound effect. (Pas de loop).
+- 'Bruit de pas (player)' - "boots.wav"
+- 'Bruit de bombe du boss' - "bomb.wav"
+- 'son du feu (Lancer avec la baguette magique)' - "burning.wav"
+
+La classe java `game.Sound` permet de récupérer tous les sons et de les assigner à un numéro.
+SetFile permettra de référencer le son lorsqu'on l'appelle via une fonction (playSE("valeur du sons") ou playMusic("Valeur du son")).
+
+Play, loop, stop, close sont 4 méthodes qui permettent de gérer les sons. 
+
+Dans `game.icrogue.ICRogue` deux méthodes (PlaySE() et playMusic) sont implémentés. Elles sont appelées lorsqu'un son doit être joué.
+Exemple : playSE(de bruit de pas) est joué dans `game.icrogue.actor.ICRoguePlayer` à chaque pas du joueur.
+
+

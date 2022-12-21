@@ -23,6 +23,8 @@ public class Heart extends Heal{
         setSprites(Sprite.extractSprites("zelda/heart", 4, 1,1, this,16, 16));
     }
 
+    //GESTION DES INTERACTIONS
+
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());

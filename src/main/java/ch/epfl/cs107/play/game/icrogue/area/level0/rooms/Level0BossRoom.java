@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Level0BossRoom extends Level0EnemyRoom {
+    /**
+     * @param roomCoordinates Position de la salle
+     */
     public Level0BossRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
         List<Enemy> enemies = new ArrayList<>();

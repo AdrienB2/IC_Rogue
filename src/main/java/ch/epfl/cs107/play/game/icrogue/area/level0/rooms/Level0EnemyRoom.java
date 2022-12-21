@@ -12,6 +12,10 @@ public abstract class Level0EnemyRoom extends Level0Room{
     private List<Enemy> enemies = new ArrayList<>();
     private boolean isHeartGiven = false;
     private Heart heart;
+
+    /**
+     * @param roomCoordinates Position de la salle
+     */
     public Level0EnemyRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
     }

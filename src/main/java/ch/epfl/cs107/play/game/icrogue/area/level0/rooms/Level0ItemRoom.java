@@ -12,6 +12,9 @@ import java.util.List;
 public abstract class Level0ItemRoom extends Level0Room{
     List<Item> items = new ArrayList<>();
 
+    /**
+     * @param roomCoordinates Position de la salle
+     */
     public Level0ItemRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
     }

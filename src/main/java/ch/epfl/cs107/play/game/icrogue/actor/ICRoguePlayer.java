@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.actor.TextGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.actor.items.*;
 import ch.epfl.cs107.play.game.icrogue.actor.projectiles.Fire;
@@ -92,6 +93,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
         if(keyboard.get(Keyboard.X).isPressed() && canUseFire){ // Si le joueur appuie sur X et qu'il peut utiliser le feu on crée un projectile de feu
             getOwnerArea().registerActor(new Fire(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates()));
+            ICRogue.playSE(4);
         }
         super.update(deltaTime);
     }

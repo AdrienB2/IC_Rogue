@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Level0Room extends ICRogueRoom {
     private boolean isConnectorsOpen = false;
 
