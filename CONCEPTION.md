@@ -64,8 +64,7 @@ Le texte est affiché en utilisant un `Text` par lettre. Cela est dû à un prob
 
 Différents sons ont été ajoutés afin de rendre le jeu plus immersif :
 - 'Musique de background' - "music.wav" tout au long de l'aventure, une musique d'ambiance se jouera en fond.
-                            cette musique utilise `playMusic()` afin de jouer le son en boucle. (loop). 
-- 
+                            cette musique utilise `playMusic()` afin de jouer le son en boucle. (loop).
 Les exemples de sons suivant utiliserons `playSE()` qui jouera une seul fois le sound effect. (Pas de loop).
 - 'Bruit de pas (player)' - "boots.wav"
 - 'Bruit de bombe du boss' - "bomb.wav"
@@ -76,7 +75,7 @@ SetFile permettra de référencer le son lorsqu'on l'appelle via une fonction (p
 
 Play, loop, stop, close sont 4 méthodes qui permettent de gérer les sons. 
 
-Dans `game.icrogue.ICRogue` deux méthodes (PlaySE() et playMusic) sont implémentés. Elles sont appelées lorsqu'un son doit être joué.
+Dans `game.icrogue.ICRogue` deux méthodes (PlaySE() et playMusic()) sont implémentés. Elles sont appelées lorsqu'un son doit être joué.
 Exemple : playSE(de bruit de pas) est joué dans `game.icrogue.actor.ICRoguePlayer` à chaque pas du joueur.
 
 
