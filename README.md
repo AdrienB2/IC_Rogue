@@ -1,4 +1,17 @@
-# MP2 - ICRogue
+# Bienvenue dans ICRogue ! 
+
+## But du jeu : 
+Vous commencez dans une salle au niveau 0, votre but est de monter les étages de la grotte !
+Munissez-vous de votre courage et d'un baton caché, pour pouvoir vaincre les différents énnemis que vous trouverez toute au long de votre aventure ! 
+
+Une fois la salle terminé, vous pourrez passer a la salle suivante ! Et cela jusqu'au boss de chaque niveau !
+
+Votre premier objectif, trouver le baton magique qui vous permettra de vaincre les monstres des grottes plus facilement ! N'hesitez pas à leur sauter dessus.
+
+Lorsque vous tuerez le boss (Bravo), un message de victoire apparaitra sur votre écran et vous passerez au niveau suivant !
+
+Attention a votre bar de vie, une fois celle-ci vide. La mort vous attendra (Message : Game Over) et vous recommencerez votre aventure depuis le début !
+
 ## Contrôles
 
 | Touche  | Action                                                                        |
