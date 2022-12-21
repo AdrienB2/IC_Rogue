@@ -20,6 +20,10 @@ public class HUD extends Entity {
         keyIconHUD = new KeyIconHUD();
     }
 
+    /**
+     * @param playerHP (int): the player's HP
+     * @param hasKey (boolean): true if the player has the key
+     */
     public void updateHUD(int playerHP, boolean hasKey){
         hpDisplay.updateHpBar(playerHP);
         keyIconHUD.setDisplayKey(hasKey);

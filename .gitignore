@@ -96,5 +96,3 @@ crashlytics-build.properties
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
-
-src/main/java/ch/epfl/cs107/play/Submit.java

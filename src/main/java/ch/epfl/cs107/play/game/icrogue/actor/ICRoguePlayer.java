@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private int hp;
-    private int money = 0;
+
     private int maxHP = 10;
     private boolean canUseFire;
     protected boolean isChangingRoom;
@@ -38,6 +38,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private final static int MOVE_DURATION = 6;
 
     private ArrayList<Integer> keys = new ArrayList<>();
+
+    private final float INVULNERABILITY_DURATION = 0.5f;
+    private float invulnerabilityTimer = 0;
+    private boolean isInvulnerable = false;
+
     /**
      * Demo actor
      *
@@ -45,10 +50,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     public ICRoguePlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
         super(owner, orientation, coordinates);
         this.hp = 10;
-        sprites = Sprite.extractSprites("zelda/player", 4, 1, 2,this, 16, 32, new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT});
+        sprites = Sprite.extractSprites(spriteName, 4, 1, 2,this, 16, 32, new Orientation[] {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT});
         animations = Animation.createAnimations(MOVE_DURATION/2, sprites);
         handler = new ICRoguePlayerInteractionHandler();
-        canUseFire = true;
+        canUseFire = false;
         resetMotion();
     }
 
@@ -61,6 +66,13 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
 
     @Override
     public void update(float deltaTime) {
+        if (isInvulnerable){
+            invulnerabilityTimer += deltaTime;
+            if (invulnerabilityTimer >= INVULNERABILITY_DURATION){
+                isInvulnerable = false;
+                invulnerabilityTimer = 0;
+            }
+        }
         isChangingRoom = false;
         Keyboard keyboard= getOwnerArea().getKeyboard();
 
@@ -68,6 +80,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
         if(isDisplacementOccurs()) {
             animations[getOrientation().ordinal()].update(deltaTime);
         }
@@ -125,7 +138,10 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
      * @param damage (float) : nombre de points de dommage infligé
      */
     public void takeDamages(float damage){
-        this.hp -= damage;
+        if (!isInvulnerable){
+            this.hp -= damage;
+            this.isInvulnerable = true;
+        }
     }
 
     /**
@@ -182,7 +198,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     @Override
     public boolean wantsViewInteraction() {
         Keyboard keyboard = getOwnerArea().getKeyboard();
-        return keyboard.get(Keyboard.W).isDown();
+        return keyboard.get(Keyboard.W).isPressed();
     }
 
     /**
@@ -229,12 +245,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
 
         @Override
-        public void interactWith(Coin other, boolean isCellInteraction) {
-            money += other.getValue();
-            other.collect();
-        }
-
-        @Override
         public void interactWith(Connector other, boolean isCellInteraction) {
             if(!isCellInteraction){
                 int keyUsed = other.unLock(keys);
@@ -250,7 +260,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
         @Override
         public void interactWith(Turret other, boolean isCellInteraction) {
-            other.kill();
+            other.takeDamage(1);
         }
     }
 }

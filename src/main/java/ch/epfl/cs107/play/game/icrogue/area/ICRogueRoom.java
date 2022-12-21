@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
+import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.signal.logic.Logic;
@@ -14,6 +15,7 @@ import java.util.List;
 public abstract class ICRogueRoom extends Area implements Logic {
 
     private ICRogueBehavior behavior;
+    protected ICRoguePlayer player;
 
     public DiscreteCoordinates getPosition() {
         return position;
@@ -68,7 +70,9 @@ public abstract class ICRogueRoom extends Area implements Logic {
         }
         return false;
     }
-
+    public void setPlayer(ICRoguePlayer player) {
+        this.player = player;
+    }
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

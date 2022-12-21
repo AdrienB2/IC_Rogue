@@ -6,7 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
-import ch.epfl.cs107.play.game.icrogue.actor.enemies.FlameSkull;
+import ch.epfl.cs107.play.game.icrogue.actor.enemies.Boss;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Log;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
@@ -28,7 +28,7 @@ public class Fire extends Projectile {
     public Fire(Area area, Orientation orientation, DiscreteCoordinates position) {
         super(area, orientation, position, 1, 5);
         handler = new FireInteractionHandler();
-        setSprite(new Sprite("zelda/fire", 1f, 1f, this, new RegionOfInterest(0, 0, 16, 16), new Vector(0, 0)));
+        setSprites(Sprite.extractSprites("zelda/explosion", 7, 1.2f,1.2f, this,32,32), false, true, 4);
     }
 
     @Override
@@ -60,28 +60,31 @@ public class Fire extends Projectile {
                 consume();
             }
         }
-
         @Override
         public void interactWith(Turret other, boolean isCellInteraction) {
             if(isCellInteraction){
-                other.kill();
+                other.takeDamage(damage);
                 consume();
             }
         }
         @Override
         public void interactWith(Log other, boolean isCellInteraction) {
             if(isCellInteraction){
-                other.kill();
+                other.takeDamage(damage);
                 consume();
             }
+        }
+        @Override
+        public void interactWith(Boss other, boolean isCellInteraction) {
+            other.getDamage(damage);
+            consume();
         }
 
         @Override
-        public void interactWith(FlameSkull other, boolean isCellInteraction) {
-            if(isCellInteraction){
-                other.kill();
-                consume();
-            }
+        public void interactWith(Arrow other, boolean isCellInteraction) {
+            other.consume();
+            consume();
         }
+
     }
 }

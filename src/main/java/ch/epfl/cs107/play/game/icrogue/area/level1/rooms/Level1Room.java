@@ -85,6 +85,7 @@ public class Level1Room extends ICRogueRoom {
     protected void createArea() {
         // Base
         registerActor(new Background(this, behaviorName));
+        //registerActor(new ICRoguePNJ(this, Orientation.UP, new DiscreteCoordinates(5,5)));
     }
 
     @Override

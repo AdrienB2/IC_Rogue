@@ -18,6 +18,7 @@ public abstract class Enemy extends ICRogueActor {
     private Animation[] animations;
     private int currentAnim;
     protected int MOVE_DURATION = 6;
+    protected int hp = 1;
 
     /**
      * Default MovableAreaEntity constructor
@@ -41,8 +42,18 @@ public abstract class Enemy extends ICRogueActor {
     /**
      * Tue l'ennemi
      */
-    public void kill(){
+    protected void kill(){
         isDead = true;
+    }
+
+    /**
+     * @param damage (int) : dégats infligés à l'ennemi
+     */
+    public void takeDamage(int damage){
+        hp -= damage;
+        if(hp <= 0){
+            kill();
+        }
     }
 
     /**
@@ -55,14 +66,22 @@ public abstract class Enemy extends ICRogueActor {
         animations[0] = new Animation(MOVE_DURATION/2, this.sprites[0]);
         currentAnim = 0;
     }
+
+    /**
+     * @param sprites (Sprite[][]) : tableau de sprites de l'ennemi
+     */
     protected void setSprites(Sprite[][] sprites){
         this.sprites = sprites;
         animations = Animation.createAnimations(MOVE_DURATION/2, this.sprites, true);
     }
+
+    /**
+     * @param depth (int) : profondeur de l'ennemi
+     */
     protected void setSpritesDepth(float depth){
-        for (int i = 0; i < sprites.length; i++) {
-            for (int j = 0; j < sprites[i].length; j++) {
-                sprites[i][j].setDepth(depth);
+        for (Sprite[] sprite : sprites) {
+            for (Sprite value : sprite) {
+                value.setDepth(depth);
             }
         }
     }

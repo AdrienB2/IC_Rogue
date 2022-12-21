@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Animation;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
@@ -15,10 +16,11 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
 
     private static int DEFAULT_DAMAGE = 1;
     private static int DEFAULT_MOVE_DURATION = 10;
-    private int frame;
+    private int moveDuration;
     protected int damage;
     private boolean isConsumed;
-    protected Sprite sprite;
+    protected Sprite[] sprites;
+    private Animation animation;
 
     /**
      * Default MovableAreaEntity constructor
@@ -27,10 +29,10 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
      */
-    public Projectile(Area area, Orientation orientation, DiscreteCoordinates position, int damage, int frame) {
+    public Projectile(Area area, Orientation orientation, DiscreteCoordinates position, int damage, int moveDuration) {
         super(area, orientation, position);
         this.damage = damage;
-        this.frame = frame;
+        this.moveDuration = moveDuration;
         this.isConsumed = false;
     }
     public Projectile(Area area, Orientation orientation, DiscreteCoordinates position){
@@ -64,9 +66,21 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
      * @param sprite (Sprite) : Sprite du projectile
      */
     public void setSprite(Sprite sprite){
-        this.sprite = sprite;
+        this.sprites = new Sprite[]{sprite};
+        this.animation = new Animation(3, this.sprites, true);
     }
+    public void setSprites(Sprite[] sprites, boolean repeatAnimation, boolean inverseSprites, int frameDuration){
+        this.sprites = sprites;
+        if(inverseSprites) {
+            for (int i = 0; i < this.sprites.length / 2; i++) {
+                Sprite temp = this.sprites[i];
+                this.sprites[i] = this.sprites[this.sprites.length - i - 1];
+                this.sprites[this.sprites.length - i - 1] = temp;
+            }
+        }
 
+        this.animation = new Animation(frameDuration, this.sprites, repeatAnimation);
+    }
     @Override
     public void consume() {
         this.isConsumed = true;
@@ -89,14 +103,15 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
 
     @Override
     public void update(float deltaTime) {
-        move(frame);
+        move(moveDuration);
+        animation.update(deltaTime);
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
         if(!isConsumed){
-            sprite.draw(canvas);
+            animation.draw(canvas);
         }
     }
 }

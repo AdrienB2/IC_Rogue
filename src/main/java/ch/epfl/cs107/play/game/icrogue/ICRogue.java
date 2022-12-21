@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.icrogue.Screens.GameOverScreen;
 import ch.epfl.cs107.play.game.icrogue.Screens.PauseScreen;
 import ch.epfl.cs107.play.game.icrogue.Screens.WinScreen;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
+import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
 import ch.epfl.cs107.play.game.icrogue.area.level0.Level0;
 import ch.epfl.cs107.play.game.icrogue.area.level1.Level1;
@@ -27,16 +28,18 @@ public class ICRogue extends AreaGame {
     private boolean isPaused = false;
     private boolean winScreen = false;
     private boolean gameOver = false;
-    private int levelToLoad = 1;
+    private int levelToLoad = 0;
 
     private void initLevel(){
         winScreen = false;
         gameOver = false;
         level = loadLevel();
         currentArea = setCurrentArea(level.getFirstRoomTitle(), true);
-        player = new ICRoguePlayer(currentArea, Orientation.UP, new DiscreteCoordinates(2,2), "zelda/player");
-        player.enterArea(currentArea, new DiscreteCoordinates(2,2));
         hud = new HUD();
+        if(player == null){
+            player = new ICRoguePlayer(currentArea, Orientation.UP, new DiscreteCoordinates(2,2), "zelda/player");
+        }
+        player.enterArea(currentArea, new DiscreteCoordinates(2,2));
         currentArea.registerActor(hud);
     }
 
@@ -54,6 +57,8 @@ public class ICRogue extends AreaGame {
             addArea(new PauseScreen());
             addArea(new WinScreen());
             addArea(new GameOverScreen());
+            ((ICRogueRoom)currentArea).setPlayer(player);
+
             return true;
         }
         return false;
@@ -123,5 +128,8 @@ public class ICRogue extends AreaGame {
         currentArea = setCurrentArea(destinationRoom, false);
         currentArea.registerActor(hud);
         player.enterArea(currentArea, playerArrivalCoordinates);
+        if(currentArea instanceof ICRogueRoom && (level).isBoosRoom(((ICRogueRoom)currentArea).getPosition())){
+            ((ICRogueRoom)currentArea).setPlayer(player);
+        }
     }
 }

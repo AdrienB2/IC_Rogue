@@ -19,7 +19,7 @@ public class Heart extends Heal{
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      */
     public Heart(Area area, Orientation orientation, DiscreteCoordinates position) {
-        super(area, orientation, position, 1);
+        super(area, orientation, position, 2);
         setSprites(Sprite.extractSprites("zelda/heart", 4, 1,1, this,16, 16));
     }
 

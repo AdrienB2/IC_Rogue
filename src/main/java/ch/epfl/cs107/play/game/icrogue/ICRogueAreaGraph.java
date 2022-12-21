@@ -7,7 +7,6 @@ public class ICRogueAreaGraph extends AreaGraph {
     public ICRogueAreaGraph(int width, int height){
         for (int i = 1; i < width; i++) {
             for (int j = 1; j < height; j++) {
-                System.out.println(i + " " + j);
                 boolean hasLeftEdge = true;
                 boolean hasRightEdge = true;
                 boolean hasUpEdge = true;

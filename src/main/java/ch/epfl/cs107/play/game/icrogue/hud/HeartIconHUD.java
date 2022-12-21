@@ -6,7 +6,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class HeartIconHUD extends Entity {
-    private Sprite[] sprites;
+    private final Sprite[] sprites;
     private int spriteIndex = 2;
     public HeartIconHUD(int index) {
         super(new DiscreteCoordinates(index,9).toVector());

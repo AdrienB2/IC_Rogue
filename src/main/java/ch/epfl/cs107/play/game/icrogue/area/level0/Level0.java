@@ -1,18 +1,15 @@
 package ch.epfl.cs107.play.game.icrogue.area.level0;
 
 import ch.epfl.cs107.play.game.icrogue.ICRogue;
-import ch.epfl.cs107.play.game.icrogue.Screens.WinScreen;
 import ch.epfl.cs107.play.game.icrogue.actor.Connector;
 import ch.epfl.cs107.play.game.icrogue.area.ICRogueRoom;
 import ch.epfl.cs107.play.game.icrogue.area.Level;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0KeyRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0Room;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0StaffRoom;
-import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.Level0TurretRoom;
+import ch.epfl.cs107.play.game.icrogue.area.level0.rooms.*;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-public class Level0 extends Level {
+public class Level0 extends Level{
     private final int bossKeyId = 1;
+
     public Level0(ICRogue game) {
         super(true, new DiscreteCoordinates(1,5), RoomType.getDistributionList(), 4,2);
         for (ICRogueRoom[] icRogueRooms : map) {
@@ -52,7 +49,7 @@ public class Level0 extends Level {
         }
     }
     protected ICRogueRoom createBoosRoom(DiscreteCoordinates roomCoordinates) {
-        return new Level0TurretRoom(roomCoordinates);
+        return new Level0BossRoom(roomCoordinates);
     }
 
     @Override

@@ -15,6 +15,7 @@ public abstract class Level implements Logic {
     protected DiscreteCoordinates bossRoom;
     protected String firstRoomTitle;
 
+
     /**
      * @param startPosition Coordonnées de départ dans les salles
      * @param width Largeur de la carte
@@ -118,49 +119,56 @@ public abstract class Level implements Logic {
         this.map = new ICRogueRoom[nbRooms][nbRooms];
         MapState[][] roomsPlacement = generateRandomRoomPlacement();
         createRooms(roomsPlacement, roomsDistribution);
-        printMap(roomsPlacement);
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                setUpConnector(roomsPlacement, map[i][j]);
+        for (ICRogueRoom[] icRogueRooms : map) {
+            for (ICRogueRoom icRogueRoom : icRogueRooms) {
+                setUpConnector(roomsPlacement, icRogueRoom);
             }
 
         }
     }
     protected MapState[][] generateRandomRoomPlacement(){
+        //Initialisation de la map de placement des salles avec des salles NULL
         MapState[][] roomsPlacement = new MapState[map.length][map.length];
         for (int i = 0; i < roomsPlacement.length; i++) {
             for (int j = 0; j < roomsPlacement.length; j++) {
                 roomsPlacement[i][j] = MapState.NULL;
             }
         }
+        //On crée une liste de coordonnées des salles placées
         ArrayList<DiscreteCoordinates> placedRooms = new ArrayList<>();
+        //On place la salle de départ au centre de la map
         roomsPlacement[map.length/2][map.length/2] = MapState.PLACED;
         placedRooms.add(new DiscreteCoordinates(map.length/2, map.length/2));
-        int roomsToPlace = map.length - 1;
+
+        //On place les autres salles
+        int roomsToPlace = map.length - 1; // nombre de salles à placer
         while (roomsToPlace > 0){
             int nbPlacedRooms = placedRooms.size();
+            //pour chaque salle placée, on place une salle autour
             for (int i = 0; i<nbPlacedRooms; i++) {
-                if(roomsToPlace == 0) break;
+                if(roomsToPlace == 0) break; //si on a placé toutes les salles, on sort de la boucle
+                //On récupère les coordonnées de la salle placée et on vérifie que la salle ne soit pas déjà explorée
                 DiscreteCoordinates currentPlacedRoom = placedRooms.get(i);
                 if(roomsPlacement[currentPlacedRoom.x][currentPlacedRoom.y] == MapState.EXPLORED) {
                     continue;
                 }
-                //compte le nombre de free slot
-                int nbFreeSlots = 0;
-                ArrayList<DiscreteCoordinates> freeSlots = new ArrayList<>();
+
+                int nbFreeSlots = 0;//compte le nombre de cases libres autour de la salle
+                ArrayList<DiscreteCoordinates> freeSlots = new ArrayList<>(); //liste des cases libres autour de la salle
+                //On vérifie que les cases autour de la salle sont libres et on les ajoute à la liste des cases libres
                 if(currentPlacedRoom.y - 1 >= 0
                         && roomsPlacement[currentPlacedRoom.x][currentPlacedRoom.y - 1] == MapState.NULL){
-                    nbFreeSlots += 1;
+                    nbFreeSlots++;
                     freeSlots.add(new DiscreteCoordinates(currentPlacedRoom.x, currentPlacedRoom.y-1));
                 }
                 if(currentPlacedRoom.y + 1 < map.length
                         && roomsPlacement[currentPlacedRoom.x][currentPlacedRoom.y + 1] == MapState.NULL){
-                    nbFreeSlots += 1;
+                    nbFreeSlots++;
                     freeSlots.add(new DiscreteCoordinates(currentPlacedRoom.x, currentPlacedRoom.y + 1));
                 }
                 if(currentPlacedRoom.x + 1 < map.length
                         && roomsPlacement[currentPlacedRoom.x + 1][currentPlacedRoom.y] == MapState.NULL){
-                    nbFreeSlots += 1;
+                    nbFreeSlots++;
                     freeSlots.add(new DiscreteCoordinates(currentPlacedRoom.x + 1, currentPlacedRoom.y));
                 }
                 if(currentPlacedRoom.x - 1 >= 0
@@ -168,28 +176,34 @@ public abstract class Level implements Logic {
                     nbFreeSlots += 1;
                     freeSlots.add(new DiscreteCoordinates(currentPlacedRoom.x - 1, currentPlacedRoom.y));
                 }
-                if(nbFreeSlots == 0){continue;}
-                int roomsToPlaceNow = RandomHelper.roomGenerator.nextInt(0, Integer.min(roomsToPlace, nbFreeSlots));
-                if (roomsToPlaceNow == 0) roomsToPlaceNow++;
-                List<Integer> roomsIndexesList = IntStream.rangeClosed(0, freeSlots.size()-1).boxed().toList();
-                List<Integer> roomsChosenPosition =  RandomHelper.chooseKInList(roomsToPlaceNow,roomsIndexesList);
+
+                if(nbFreeSlots == 0){continue;} //On vérifie qu'il y ait au moins une case libre autour de la salle
+                int roomsToPlaceNow = RandomHelper.roomGenerator.nextInt(0, Integer.min(roomsToPlace, nbFreeSlots)); //On choisit le nombre de salles à placer autour de la salle
+                if (roomsToPlaceNow == 0) roomsToPlaceNow++; //On place au moins une salle autour de la salle
+                List<Integer> roomsIndexesList = IntStream.rangeClosed(0, freeSlots.size()-1).boxed().toList(); //On crée une liste des index des cases libres
+                List<Integer> roomsChosenPosition = RandomHelper.chooseKInList(roomsToPlaceNow,roomsIndexesList); //On choisit aléatoirement les cases où placer les salles
+                //On place les salles
                 for (Integer posIndex:
                      roomsChosenPosition) {
                     DiscreteCoordinates pos = freeSlots.get(posIndex);
                     roomsPlacement[pos.x][pos.y] = MapState.PLACED;
                     placedRooms.add(pos);
                 }
+                //On marque la salle comme explorée et on décrémente le nombre de salles à placer
                 roomsPlacement[currentPlacedRoom.x][currentPlacedRoom.y] = MapState.EXPLORED;
                 roomsToPlace -= roomsToPlaceNow;
             }
         }
+
+        //On place la salle du boss
         boolean isBoosRoomPlaced = false;
         int i = 0;
-        while (!isBoosRoomPlaced && i<placedRooms.size()){
+        while (!isBoosRoomPlaced && i<placedRooms.size()){ // On sort de la boucle si on a placé la salle du boss ou si on a parcouru toutes les salles placées
             DiscreteCoordinates currentPlacedRoom = placedRooms.get(i);
-            int nbFreeSlots = 0;
-            ArrayList<DiscreteCoordinates> freeSlots = new ArrayList<>();
+            int nbFreeSlots = 0; //compte le nombre de cases libres autour de la salle
+            ArrayList<DiscreteCoordinates> freeSlots = new ArrayList<>(); //liste des cases libres autour de la salle
 
+            //On vérifie que les cases autour de la salle sont libres et on les ajoute à la liste des cases libres
             if(currentPlacedRoom.y - 1 >= 0
                     && roomsPlacement[currentPlacedRoom.x][currentPlacedRoom.y - 1] == MapState.NULL){
                 nbFreeSlots += 1;
@@ -212,6 +226,7 @@ public abstract class Level implements Logic {
             }
             if(nbFreeSlots == 0){i++; continue;}
 
+            //On choisit aléatoirement une case libre autour de la salle et on place la salle du boss
             List<Integer> roomsIndexesList = IntStream.rangeClosed(0, freeSlots.size()-1).boxed().toList();
             List<Integer> roomsChosenPosition =  RandomHelper.chooseKInList(1,roomsIndexesList);
             DiscreteCoordinates pos = freeSlots.get(roomsChosenPosition.get(0));
@@ -222,30 +237,36 @@ public abstract class Level implements Logic {
 
         return roomsPlacement;
     }
+
     private void createRooms(MapState[][] roomsPlacement, int[] roomDistribution){
         ArrayList<DiscreteCoordinates> usableLocations = new ArrayList<>();
+        //On cherche les salles libres
         for (int i = 0; i < roomsPlacement.length; i++) {
             for (int j = 0; j < roomsPlacement[i].length; j++) {
                 if (roomsPlacement[i][j] == MapState.EXPLORED || roomsPlacement[i][j] == MapState.PLACED){
                     usableLocations.add(new DiscreteCoordinates(i,j));
                 }
-                else if (roomsPlacement[i][j] == MapState.BOSS_ROOM){
+                else if (roomsPlacement[i][j] == MapState.BOSS_ROOM){ // Si c'est la salle du boss, on la crée
                     map[i][j] = createBoosRoom(new DiscreteCoordinates(i,j));
                     this.bossRoom = new DiscreteCoordinates(i,j);
                 }
             }
         }
+        //On crée les salles
         for(int i = 0; i<roomDistribution.length; i++){
-            int k = roomDistribution[i];
+            //On choisit aléatoirement les coordonnées pour chaque type de salle
+            int k = roomDistribution[i]; //nombre de salles de type i à créer
             List<Integer> usableLocationsIndexesList = IntStream.rangeClosed(0, usableLocations.size()-1).boxed().toList();
             List<Integer> chosenLocationIndexes = RandomHelper.chooseKInList(k, usableLocationsIndexesList);
-            List<DiscreteCoordinates> usedLocation = new ArrayList<>();
+            List<DiscreteCoordinates> usedLocation = new ArrayList<>(); //On stocke les coordonnées des salles déjà utilisées
+            //Pour chaque salle de type i, on crée les salles aux coordonnées choisies et on les ajoute à la liste des salles utilisées
             for (int j = 0; j < chosenLocationIndexes.size(); j++) {
                 DiscreteCoordinates pos = usableLocations.get(chosenLocationIndexes.get(j));
                 usedLocation.add(pos);
                 createRoom(i, pos);
                 roomsPlacement[pos.x][pos.y] = MapState.CREATED;
             }
+            //On enlève les salles utilisées de la liste des salles libres
             for (int j = 0; j<usedLocation.size(); j++){
                 usableLocations.remove(usedLocation.get(j));
             }
@@ -284,6 +305,9 @@ public abstract class Level implements Logic {
         return 0;
     }
 
+    public boolean isBoosRoom(DiscreteCoordinates coordinates){
+        return coordinates.equals(bossRoom);
+    }
 
     protected enum MapState {
         NULL, // Empty space
