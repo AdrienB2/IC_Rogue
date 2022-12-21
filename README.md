@@ -6,7 +6,9 @@ Munissez-vous de votre courage et d'un baton caché, pour pouvoir vaincre les di
 
 Une fois la salle terminé, vous pourrez passer a la salle suivante ! Et cela jusqu'au boss de chaque niveau !
 
-Votre premier objectif, trouver le baton magique qui vous permettra de vaincre les monstres des grottes plus facilement ! N'hesitez pas à leur sauter dessus.
+Votre premier objectif, trouver le baton magique qui vous permettra de vaincre les monstres des grottes plus facilement ! N'hesitez pas à leur sauter dessus. 
+
+Grâce a votre baton, vous pourrez lancer des boules de feu grâce a votre touche "x". 
 
 Lorsque vous tuerez le boss (Bravo), un message de victoire apparaitra sur votre écran et vous passerez au niveau suivant !
 
@@ -39,6 +41,8 @@ Vous ne risquez pas de tomber sur ce type de monstre dans le premier niveau, mai
 Le boss se téléporte de façon aléatoire dans la salle, avant de se téléporter, il pose une bombe qui explose au bout de 3 secondes. Pour le tuer, vous devez le toucher avec une boule de feu.
 Les bombes donnent des points de dégâts dans un rayon d'une case autour d'elle.
 
+---
+
 ## HUD
 
 ### Bar de vie (Player) : 
@@ -50,9 +54,7 @@ En haut à droite, vous pourrez avoir l'occasion de voir la clé une fois celle-
 ### Bar de vie (Boss) : 
 En bas a gauche, vous apercevrai le niveau de vie du boss final (Maitres des explosions) dans sa salle. 
 
-
-
-
-
-
-
+## WIN/LOOSE/PAUSE
+En appuyant sur la touche "escape" à n'importe quelle moment,le jeu se mettra en pause.
+Si vous éliminé le boss, un ecran de victoire (Win) apparaitra et en appuyant sur "enter" vous passerez au niveau suivant.
+Si vous êtes mort, un ecran de défaite (GameOver) apparaitra et en appuyant sur "enter" vous recommencerez le jeu.
