@@ -11,8 +11,7 @@ import ch.epfl.cs107.play.game.icrogue.actor.enemies.Log;
 import ch.epfl.cs107.play.game.icrogue.actor.enemies.Turret;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.RegionOfInterest;
-import ch.epfl.cs107.play.math.Vector;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -76,7 +75,7 @@ public class Fire extends Projectile {
         }
         @Override
         public void interactWith(Boss other, boolean isCellInteraction) {
-            other.getDamage(damage);
+            other.takeDamage(damage);
             consume();
         }
 

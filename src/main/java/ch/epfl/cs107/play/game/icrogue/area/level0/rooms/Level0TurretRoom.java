@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Level0TurretRoom extends Level0EnemyRoom{
+    /**
+     * Position prédéfinie des ennemis "Turret"
+     */
     //list of all the possible positions of the turrets
     private static final DiscreteCoordinates[][] TURRET_COORDINATES_PATTERNS = new DiscreteCoordinates[][]{
             new DiscreteCoordinates[] {

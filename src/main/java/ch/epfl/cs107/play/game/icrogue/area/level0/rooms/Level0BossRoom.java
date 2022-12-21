@@ -28,14 +28,6 @@ public class Level0BossRoom extends Level0EnemyRoom {
     }
 
     @Override
-    public boolean begin(Window window, FileSystem fileSystem) {
-        if (super.begin(window, fileSystem)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
     }

@@ -8,6 +8,10 @@ import ch.epfl.cs107.play.window.Canvas;
 public class HeartIconHUD extends Entity {
     private final Sprite[] sprites;
     private int spriteIndex = 2;
+
+    /**
+     * @param index (int) : index dans le tableau de sprite
+     */
     public HeartIconHUD(int index) {
         super(new DiscreteCoordinates(index,9).toVector());
         sprites = Sprite.extractSprites("zelda/heartDisplay", 3, 1,1, this, 16, 16);
@@ -16,6 +20,9 @@ public class HeartIconHUD extends Entity {
         sprites[2].setDepth(Integer.MAX_VALUE);
     }
 
+    /**
+     * @param spriteIndex (int) : index du sprite à afficher
+     */
     public void setSpriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
     }

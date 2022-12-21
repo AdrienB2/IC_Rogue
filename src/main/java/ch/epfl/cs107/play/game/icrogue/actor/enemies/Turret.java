@@ -9,9 +9,9 @@ import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Turret  extends Enemy{
-    private Orientation[] directions;
-    private final float COOLDOWN = 2.f;
-    private float counter;
+    private Orientation[] directions; // directions dans lesquelles la tour tire
+    private final float COOLDOWN = 2.f; // temps entre deux tirs
+    private float counter;// compte le temps écoulé depuis le dernier tir
     /**
      * Default MovableAreaEntity constructor
      *
@@ -28,14 +28,17 @@ public class Turret  extends Enemy{
 
     @Override
     public void update(float deltaTime) {
+        // on incrémente le compteur et vérifie si le temps écoulé depuis le dernier tir est supérieur ou égale au cooldown
         this.counter+=deltaTime;
         if(this.counter >= COOLDOWN){
+            //On crée une flèche dans chaque direction et remet le compteur à 0
             for (Orientation orientation:
                     directions) {
                 getOwnerArea().registerActor(new Arrow(getOwnerArea(), orientation, getCurrentMainCellCoordinates()));
                 this.counter = 0;
             }
         }
+        // On supprime la tour si elle n'a plus de vie
         if(isDead()){
             getOwnerArea().unregisterActor(this);
         }

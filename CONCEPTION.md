@@ -20,9 +20,9 @@ Nous avons ajouté plusieurs classes et sous-classe pour les items.
 Toutes les classes ci-dessous se trouve dans `game.icrogue.items` 
 
 ### Heal
-Cette classe abstraite est un `Item` qui contient un attribut représentant le nombre de point de vie donné au joueur lorsqu'il collecte cette item.
+Cette classe abstraite est un `Item` qui contient un attribut représentant le nombre de points de vie donné au joueur lorsqu'il collecte cette item.
 
-Voici les sous-classes conctrètes de `Heal`:
+Voici les sous-classes concretes de `Heal`:
 
 #### Heart   
 Cette classe est une sous-classe concrète de `Heal` qui donne un point de vie au joueur
@@ -39,7 +39,7 @@ Cette classe se trouve dans `game.icrogue`
 ## Ennemis
 Nous avons ajouté different ennemis. Toutes les classes se trouvent dans `game.icrogue.actor.enemies`:
 - Log : se déplace en suivant un trajet prédéfinit et tire des flèches
-- Boss : 
+- Boss : se téléporte de façon aléatoire et pose des bombes
 
 ---
 
@@ -48,6 +48,8 @@ Pour ajouter une part d'aléatoire à la génération de la salle, nous avons aj
 Nous avons défini une liste de disposition possible pour les tourelles et nous choisissons une disposition aléatoirement. La liste `Orientation[][][] TURRET_DIRECTIONS` contient pour chaque disposition possible, les directions dans lesquelles chaque tourelle doit tirer.
 
 ---
+### Bombe
+La classe bombe représente une bombe qui explose au bout de 3 secondes. Elle se trouve dans `game.icrogue.projectiles`. Nous l'avons placée dans le package projectiles, même s'il ne s'agit pas formellement d'un projectile (elle n'hérite pas de la classe `Projectile`), car il nous semblait plus logique de la placer ici.
 
 ## Screens
 Nous avons ajouté 3 écrans :

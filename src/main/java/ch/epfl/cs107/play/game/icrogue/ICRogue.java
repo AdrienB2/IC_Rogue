@@ -36,10 +36,11 @@ public class ICRogue extends AreaGame {
         level = loadLevel();
         currentArea = setCurrentArea(level.getFirstRoomTitle(), true);
         hud = new HUD();
-        if(player == null){
+        if(player == null || levelToLoad == 00){
             player = new ICRoguePlayer(currentArea, Orientation.UP, new DiscreteCoordinates(2,2), "zelda/player");
         }
         player.enterArea(currentArea, new DiscreteCoordinates(2,2));
+        player.resetHP();
         currentArea.registerActor(hud);
     }
 
@@ -96,6 +97,7 @@ public class ICRogue extends AreaGame {
 
         if(level.isOn() && !winScreen){
             winScreen = true;
+            playSE(3);
             setCurrentArea("Win", true);
             levelToLoad += 1;
         }

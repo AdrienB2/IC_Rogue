@@ -30,13 +30,14 @@ public class Connector extends AreaEntity {
     private Sprite sprite;
 
     /**
-     * @param area
-     * @param orientation
-     * @param position
-     * @param state
-     * @param destination
-     * @param arrivalCoordinates
-     * @param keyID
+     * Constructor for a connector
+     * @param area (Area): Owner area. Not null
+     * @param orientation (Orientation): Initial orientation of the entity.
+     * @param position (DisceteCoordinate): Initial position of the entity.
+     * @param state (ICRogueConnectorState): Initial state of the connector.
+     * @param destination (String): Name of the destination room.
+     * @param arrivalCoordinates (DiscreteCoordinates): Coordinates of the arrival in the destination room.
+     * @param keyID (int): ID of the key needed to open the connector.
      */
     public Connector(Area area, Orientation orientation, DiscreteCoordinates position, ICRogueConnectorState state, String destination, DiscreteCoordinates arrivalCoordinates, int keyID) {
         super(area, orientation, position);
@@ -47,6 +48,7 @@ public class Connector extends AreaEntity {
     }
 
     /**
+     * Constructor for a connector (without key)
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate) : Initial position of the entity. Not null
@@ -137,7 +139,6 @@ public class Connector extends AreaEntity {
     public void openConnector(){
         if (this.state != ICRogueConnectorState.LOCKED && this.state !=ICRogueConnectorState.INVISIBLE) {
             this.state = ICRogueConnectorState.OPEN;
-            ICRogue.playSE(3);
         }
     }
 
@@ -164,11 +165,12 @@ public class Connector extends AreaEntity {
      * @return (int) index de la clé utilisé dans la liste de clé du joueur si le joueur possède la clé, -1 si le joueur n'a pas la bonne clé
      */
     public int unLock(List<Integer> playerKeys){
-        if(!((ICRogueRoom) getOwnerArea()).isOn())return-1;
-        if(keyID == Integer.MAX_VALUE){
+        if(!((ICRogueRoom) getOwnerArea()).isOn())return-1; // Si la salle n'est pas terminée, on ne peut pas ouvrir le connecteur
+        if(keyID == NO_KEY_ID){ //On vérifie que le connecteur est bien verrouillé
             state = ICRogueConnectorState.OPEN;
             return -1;
         }
+        //On vérifie que le joueur possède la bonne clé et on déverrouille le connecteur
         for (int i = 0;  i<playerKeys.size() ; i++) {
             if(playerKeys.get(i) == keyID){
                 state = ICRogueConnectorState.OPEN;

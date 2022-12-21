@@ -35,6 +35,9 @@ public abstract class Level0ItemRoom extends Level0Room{
         return false;
     }
 
+    /**
+     * @return (boolean) true si tous les items ont été ramassés
+     */
     @Override
     public boolean isOn() {
         boolean isItemsCollected = true;

@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Queue;
 
 public class Log extends Enemy {
-    private AreaGraph graph;
-    private DiscreteCoordinates[] targetsPositions;
-    private Queue<Orientation> path;
-    private int currentDestination = 0;
-    private final float COOLDOWN = 1f;
-    private float counter;
+    private AreaGraph graph; // représente le graphe de la salle
+    private DiscreteCoordinates[] targetsPositions; // liste des positions à atteindre
+    private Queue<Orientation> path; // représente le chemin à suivre
+    private int currentDestination = 0; // représente l'index de la destination courante
+    private final float COOLDOWN = 1f; // temps entre chaque tir
+    private float counter; // compte le temps écoulé depuis le dernier tir
 
     /**
      * Default MovableAreaEntity constructor
@@ -43,6 +43,7 @@ public class Log extends Enemy {
                 new DiscreteCoordinates(8,8),
                 new DiscreteCoordinates(8,1),
         };
+        // on récupère le chemin à suivre pour aller de la position courante à la première destination
         path = graph.shortestPath(getCurrentMainCellCoordinates(), targetsPositions[0]);
         this.counter = 0;
     }
@@ -66,16 +67,19 @@ public class Log extends Enemy {
     @Override
     public void update(float deltaTime) {
         this.counter+=deltaTime;
+        //si le chemin est vide, on récupère le chemin pour aller à la destination suivante
         if(path.size() == 0){
             getNextTarget();
         }
-        Orientation nextOrientation = path.poll();
+        Orientation nextOrientation = path.poll(); //On récupère la prochaine orientation à prendre, on oriente le monstre et on le déplace
         orientate(nextOrientation);
         move(MOVE_DURATION);
-        if(isDead()){
+
+        if(isDead()){ // On supprime le monstre de l'aire s'il est mort
             getOwnerArea().unregisterActor(this);
         }
 
+        // On tire une flèche si le cooldown est écoulé
         if(this.counter >= COOLDOWN){
             getOwnerArea().registerActor(new Arrow(getOwnerArea(),
                     getArrowOrientation() , getCurrentMainCellCoordinates().jump(getOrientation().toVector())));
@@ -84,9 +88,10 @@ public class Log extends Enemy {
         super.update(deltaTime);
     }
     private void getNextTarget(){
+        //On récupère la target actuelle et on vérifie que l'on y soit bien arrivé. Si c'est le cas, on passe à la suivante et on récupère le chemin
         DiscreteCoordinates currentTarget = targetsPositions[currentDestination];
         if(currentTarget.equals(getCurrentMainCellCoordinates())){
-            if(currentDestination == targetsPositions.length-1){
+            if(currentDestination == targetsPositions.length-1){ // quand on arrive à la dernière destination, on revient à la première
                 currentDestination = 0;
             }
             else {
@@ -94,10 +99,9 @@ public class Log extends Enemy {
             }
         }
         path = graph.shortestPath(getCurrentMainCellCoordinates(), targetsPositions[currentDestination]);
-
     }
 
-
+    //On récupère orientation de la flèche en fonction de l'orientation du monstre
     private Orientation getArrowOrientation(){
         switch (getOrientation()){
             case UP -> {return Orientation.RIGHT;}

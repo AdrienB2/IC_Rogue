@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Arrow extends Projectile {
 
-    private ArrowInteractionHandler handler;
+    private ArrowInteractionHandler handler; // Gestionnaire d'interaction
 
     /**
      * @param area (Area): Owner area. Not null

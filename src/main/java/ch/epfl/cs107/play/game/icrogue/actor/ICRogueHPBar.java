@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ICRogueHPBar implements Actor {
     private int hp;
-    private int maxHP;
+    private final int maxHP;
     private ShapeGraphics shape;
     private ImageGraphics image;
     private Vector[] vertices = new Vector[]{
@@ -26,6 +26,10 @@ public class ICRogueHPBar implements Actor {
                 new Vector(3.8f, 0.1f),
                 new Vector(0.75f, 0.4f)
     };
+
+    /**
+     * @param maxHP (int) : Maximum HP de l'entité
+     */
     public ICRogueHPBar(int maxHP) {
         this.hp = maxHP;
         this.maxHP = maxHP;
@@ -39,15 +43,20 @@ public class ICRogueHPBar implements Actor {
         image.draw(canvas);
     }
 
+    /**
+     * @param hp (int) : HP de l'entité
+     */
     public void updateHP(int hp) {
         if(hp <= 0) return;
         this.hp = hp;
+        //calcule des points du rectangle
         float ratio = (float) hp / maxHP;
         vertices[1] = new Vector(0.8f + 3 * ratio, 0.1f);
         vertices[2] = new Vector(0.8f + 3 * ratio, 0.4f);
         shape.setShape(new Polygon(Arrays.stream(vertices).toList()));
     }
 
+    //Pas utiles dans notre cas mais obligatoires pour l'implémentation de Actor
     @Override
     public Transform getTransform() {
         return null;

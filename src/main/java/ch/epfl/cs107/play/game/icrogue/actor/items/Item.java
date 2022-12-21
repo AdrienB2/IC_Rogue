@@ -10,7 +10,7 @@ import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Item extends CollectableAreaEntity {
 
-    private Animation animation;
+    private Animation animation; // Animation de l'objet
 
     /**
      * @param area (Area): Owner area. Not null
@@ -21,9 +21,17 @@ public abstract class Item extends CollectableAreaEntity {
         super(area, orientation, position);
     }
 
+    /**
+     * Setter du sprite de l'item si l'item possède des animations
+     * @param sprites (Sprite[][]) : tableau de sprites de l'ennemi
+     */
     public void setSprites(Sprite[] sprites){
         animation = new Animation(3, sprites, true);
     }
+    /**
+     * Setter du sprite de l'item si l'item n'a pas d'animations
+     * @param sprite Sprite de l'item
+     */
     public void setSprite(Sprite sprite){
         animation = new Animation(3, new Sprite[]{sprite}, true);
     }

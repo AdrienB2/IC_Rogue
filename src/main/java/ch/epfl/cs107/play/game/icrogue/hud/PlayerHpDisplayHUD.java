@@ -18,14 +18,15 @@ public class PlayerHpDisplayHUD extends Entity {
 
     public void updateHpBar(int hp){
         if(hp<0) return;
-        int nbFullHeart = hp/2;
-        int halfHeart = hp%2;
+        int nbFullHeart = hp/2; //Nombre de coeur plein
+        int halfHeart = hp%2; // 0 si pas de demi coeur, 1 si demi coeur
         for (int i = 0; i < nbFullHeart; i++) {
             heartsDisplay[i].setSpriteIndex(2);
         }
         if(halfHeart == 1){
             heartsDisplay[nbFullHeart].setSpriteIndex(1);
         }
+        //On met les autres coeurs vides
         for(int i = nbFullHeart + halfHeart; i<5; i++){
             heartsDisplay[i].setSpriteIndex(0);
         }

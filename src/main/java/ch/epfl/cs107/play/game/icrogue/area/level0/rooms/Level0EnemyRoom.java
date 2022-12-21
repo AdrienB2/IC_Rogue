@@ -15,11 +15,15 @@ public abstract class Level0EnemyRoom extends Level0Room{
     public Level0EnemyRoom(DiscreteCoordinates roomCoordinates) {
         super(roomCoordinates);
     }
- protected void setEnemies(List<Enemy> enemies){
-        for (Enemy enemy: enemies){
-            this.enemies.add(enemy);
-        }
- }
+
+    /**
+     * @param enemies Liste des ennemis
+     */
+    protected void setEnemies(List<Enemy> enemies){
+            for (Enemy enemy: enemies){
+                this.enemies.add(enemy);
+            }
+     }
     @Override
     protected void createArea() {
         super.createArea();

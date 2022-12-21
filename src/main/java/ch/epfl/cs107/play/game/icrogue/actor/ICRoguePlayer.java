@@ -23,14 +23,12 @@ import java.util.List;
 
 public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private int hp;
-
-    private int maxHP = 10;
+    private final int maxHP = 10;
     private boolean canUseFire;
     protected boolean isChangingRoom;
     private Sprite[][] sprites;
     private Animation[] animations;
 
-    /// Animation duration in frame number
 
     public ICRoguePlayerInteractionHandler handler;
     private String destinationRoom;
@@ -43,9 +41,14 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private float invulnerabilityTimer = 0;
     private boolean isInvulnerable = false;
 
+    private final float audioDuration = 0.2f;
+    private float audioTimer = 0;
+
     /**
-     * Demo actor
-     *
+     * @param owner (Area): Owner area
+     * @param orientation (Orientation): Initial orientation of the entity
+     * @param coordinates (DiscreteCoordinates): Initial position of the entity
+     * @param spriteName (String): Name of the sprite
      */
     public ICRoguePlayer(Area owner, Orientation orientation, DiscreteCoordinates coordinates, String spriteName) {
         super(owner, orientation, coordinates);
@@ -55,13 +58,6 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         handler = new ICRoguePlayerInteractionHandler();
         canUseFire = false;
         resetMotion();
-    }
-
-    /**
-     * Center the camera on the player
-     */
-    public void centerCamera() {
-        getOwnerArea().setViewCandidate(this);
     }
 
     @Override
@@ -74,7 +70,8 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
             }
         }
         isChangingRoom = false;
-        Keyboard keyboard= getOwnerArea().getKeyboard();
+
+        Keyboard keyboard = getOwnerArea().getKeyboard();
 
         moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
         moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
@@ -82,12 +79,18 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
         if(isDisplacementOccurs()) {
-            animations[getOrientation().ordinal()].update(deltaTime);
+            animations[getOrientation().ordinal()].update(deltaTime); // joue l'animation de déplacement si le joueur se déplace
+            if(audioTimer >= audioDuration){
+                audioTimer = 0;
+                ICRogue.playSE(5);
+            }
+            audioTimer += deltaTime;
         }
         else {
-            animations[getOrientation().ordinal()].reset();
+            animations[getOrientation().ordinal()].reset(); // reset l'animation de déplacement si le joueur ne se déplace pas
+            audioTimer = 0;
         }
-        if(keyboard.get(Keyboard.X).isPressed() && canUseFire){
+        if(keyboard.get(Keyboard.X).isPressed() && canUseFire){ // Si le joueur appuie sur X et qu'il peut utiliser le feu on crée un projectile de feu
             getOwnerArea().registerActor(new Fire(getOwnerArea(), getOrientation(), getCurrentMainCellCoordinates()));
         }
         super.update(deltaTime);
@@ -104,6 +107,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
                 move(MOVE_DURATION);
             }
         }
+    }
+    public void resetHP(){
+        hp = maxHP;
     }
 
     /**
@@ -139,6 +145,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
      */
     public void takeDamages(float damage){
         if (!isInvulnerable){
+            ICRogue.playSE(9);
             this.hp -= damage;
             this.isInvulnerable = true;
         }
@@ -179,6 +186,11 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return Collections.singletonList (getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
     }
+
+    /**
+     * Permet de redonner de la vie au joueur
+     * @param hpGiven (int): nombre de points de vie donnés
+     */
     public void heal(int hpGiven){
         hp += hpGiven;
         if(hp>maxHP){
@@ -186,6 +198,9 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
         }
     }
 
+    /**
+     * @return (boolean) : True si le joueur a une clé, false sinon
+     */
     public boolean hasKey(){
         return this.keys.size() > 0;
     }
@@ -230,6 +245,7 @@ public class ICRoguePlayer extends ICRogueActor implements Interactor{
     private class ICRoguePlayerInteractionHandler implements ICRogueInteractionHandler{
         @Override
         public void interactWith(Heal other, boolean isCellInteraction) {
+            ICRogue.playSE(10);
             other.collect();
             heal(other.getHpGiven());
         }

@@ -62,8 +62,8 @@ public abstract class Projectile extends ICRogueActor implements Consumable, Int
     }
 
     /**
-     * Setter du sprite du projectile
-     * @param sprite (Sprite) : Sprite du projectile
+     * Setter du sprite du projectile si le projectile n'a pas d'animations
+     * @param sprite Sprite du projectile
      */
     public void setSprite(Sprite sprite){
         this.sprites = new Sprite[]{sprite};

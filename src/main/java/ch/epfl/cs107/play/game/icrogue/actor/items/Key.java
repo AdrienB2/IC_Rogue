@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Key extends Item{
-    private int id;
+    private int id; //identifiant de la clé, permet de l'associer à une porte
 
     /**
      * @param area (Area): Owner area. Not null
@@ -45,6 +45,9 @@ public class Key extends Item{
         ((ICRogueInteractionHandler) v).interactWith(this, isCellInteraction);
     }
 
+    /**
+     * @return (int): Identifiant de la clé
+     */
     public int getId() {
         return id;
     }

@@ -8,6 +8,9 @@ import ch.epfl.cs107.play.window.Window;
 
 import java.awt.*;
 
+/**
+ * Ecran de Win
+ */
 public class WinScreen extends Area {
 
     private String text = "WIN";

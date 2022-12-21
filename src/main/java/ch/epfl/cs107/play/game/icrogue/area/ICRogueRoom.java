@@ -26,6 +26,12 @@ public abstract class ICRogueRoom extends Area implements Logic {
     protected ArrayList<Connector> connectors = new ArrayList<>();
     protected boolean isVisited;
 
+    /**
+     * @param connectorsCoordinates (List<DiscreteCoordinates>) : Liste des coordonnées des connecteurs
+     * @param orientations (List<Orientation>) : Liste des orientations des connecteurs
+     * @param behaviorName (String) : Nom du behavior de la salle
+     * @param roomCoordinates (DiscreteCoordinates) : Position de la salle
+     */
     public ICRogueRoom(List<DiscreteCoordinates> connectorsCoordinates, List<Orientation> orientations, String behaviorName, DiscreteCoordinates roomCoordinates){
         this.behaviorName = behaviorName;
         this.position = roomCoordinates;

@@ -19,15 +19,12 @@ public class Boss extends Enemy{
     private float teleportCooldown; // temps restant avant que l'ennemi puisse téléporter à nouveau
 
     //HP BAR
-    private int HP = 30;
-    private ICRogueHPBar hpBar;
-
+    private final ICRogueHPBar hpBar;
 
     private Sprite sprite;
 
     /**
      * Default MovableAreaEntity constructor
-     *
      * @param area        (Area): Owner area. Not null
      * @param orientation (Orientation): Initial orientation of the entity. Not null
      * @param position    (Coordinate): Initial position of the entity. Not null
@@ -38,10 +35,11 @@ public class Boss extends Enemy{
         sprite = new Sprite("zelda/darkLord.spell",1,1.5f,this, new RegionOfInterest(32,64,32,32), Vector.ZERO);
         setSprite(sprite);
         setSpritesDepth(3000);
-        hpBar = new ICRogueHPBar(HP);
+        hp = 30;
+        hpBar = new ICRogueHPBar(hp);
     }
 
-    private void bossMove() {
+    private void teleportBoss() {
         //select a random direction
         int x = (int) (Math.random() * 8) + 1;
         int y = (int) (Math.random() * 8) + 1;
@@ -50,16 +48,6 @@ public class Boss extends Enemy{
         getOwnerArea().registerActor(new Bombe(getOwnerArea(), getCurrentMainCellCoordinates()));
         //teleport to the new position
         changePosition(newPos);
-    }
-
-    /**
-     * @param damage (int): the damage the player does to the enemy
-     */
-    public void getDamage(int damage) {
-        HP -= damage;
-        if(HP <= 0) {
-            kill();
-        }
     }
 
 
@@ -90,18 +78,15 @@ public class Boss extends Enemy{
     }
     @Override
     public void update(float deltaTime) {
-        System.out.println(HP);
-        System.out.println(getCurrentMainCellCoordinates());
-        System.out.println();
         teleportCooldown -= deltaTime;
         hpBar.update(deltaTime);
-        if (HP <= 0){
+        if (hp <= 0){
             kill();
             getOwnerArea().unregisterActor(this);
         }
-        hpBar.updateHP(HP);
+        hpBar.updateHP(hp);
         if(teleportCooldown <= 0) {
-            bossMove();
+            teleportBoss();
             teleportCooldown = TELEPORT_COOLDOWN;
         }
 
