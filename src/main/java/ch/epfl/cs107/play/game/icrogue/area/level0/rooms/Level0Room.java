@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Level0Room extends ICRogueRoom {
+    private boolean isConnectorsOpen = false;
+
     @Override
     public boolean isOn() {
         return true;
@@ -89,11 +91,12 @@ public class Level0Room extends ICRogueRoom {
 
     @Override
     public void update(float deltaTime) {
-        if(isOn()){
+        if(isOn() && !isConnectorsOpen){
             for (Connector connector:
                  connectors) {
                 connector.openConnector();
             }
+            isConnectorsOpen = true;
         }
         super.update(deltaTime);
     }

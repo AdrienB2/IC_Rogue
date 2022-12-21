@@ -74,7 +74,7 @@ public class Level1Room extends ICRogueRoom {
 
     @Override
     public String getTitle() {
-        return "icrogue/level0" + position.y + position.x;
+        return "icrogue/level1" + position.y + position.x;
     }
     
     @Override

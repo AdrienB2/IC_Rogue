@@ -103,6 +103,7 @@ public class ICRogue extends AreaGame {
 
         if(player.getHp()<=0 && !gameOver){
             gameOver = true;
+            playSE(2);
             setCurrentArea("GameOver", true);
             levelToLoad = 0;
         }

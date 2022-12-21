@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icrogue.actor.projectiles;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icrogue.ICRogue;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRogueActor;
 import ch.epfl.cs107.play.game.icrogue.actor.ICRoguePlayer;
 import ch.epfl.cs107.play.game.icrogue.handler.ICRogueInteractionHandler;
@@ -32,6 +33,7 @@ public class Bombe extends ICRogueActor implements Interactor {
 
     public Bombe(Area area, DiscreteCoordinates position) {
         super(area, Orientation.UP, position);
+        ICRogue.playSE(6);
         sprites = Sprite.extractSprites("zelda/bomb", 2, 1, 1, this, 16, 16);
         explosionSprite = Sprite.extractSprites("zelda/explosion", 7, 1.2f, 1.2f, this, 32, 32);
         explosionTimer = EXPLOSION_COOLDOWN;

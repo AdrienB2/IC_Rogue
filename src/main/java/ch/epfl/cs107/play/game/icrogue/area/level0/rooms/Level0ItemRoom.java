@@ -1,7 +1,6 @@
 package ch.epfl.cs107.play.game.icrogue.area.level0.rooms;
 
-import ch.epfl.cs107.play.game.icrogue.ICRogueBehavior;
-import ch.epfl.cs107.play.game.icrogue.actor.Connector;
+
 import ch.epfl.cs107.play.game.icrogue.actor.items.Item;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
