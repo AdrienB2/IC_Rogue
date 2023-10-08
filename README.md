@@ -1,5 +1,5 @@
 # Bienvenue dans ICRogue ! 
-
+Ceci est le 2ème mini-projet du cours CS-107 donné au semestre d'automne 2022 à l'EPFL
 ## But du jeu : 
 Vous commencez dans une salle au niveau 1, votre but est de monter les étages de la grotte !
 Munissez-vous de votre courage et d'un baton caché, pour pouvoir vaincre les différents énnemis que vous trouverez toute au long de votre aventure ! 
